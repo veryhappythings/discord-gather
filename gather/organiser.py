@@ -11,9 +11,8 @@ class PlayerNotFoundError(Exception):
 
 
 class Organiser:
-    TEAM_SIZE = 5
-
-    def __init__(self):
+    def __init__(self, team_size):
+        self.team_size = team_size
         self.queues = defaultdict(lambda: set())
 
     def add(self, queue, player):
@@ -29,17 +28,17 @@ class Organiser:
         self.queues[queue] = set()
 
     def ready(self, queue):
-        return len(self.queues[queue]) >= Organiser.TEAM_SIZE * 2
+        return len(self.queues[queue]) >= self.team_size * 2
 
     def pop_teams(self, queue):
-        if len(self.queues[queue]) < Organiser.TEAM_SIZE * 2:
+        if len(self.queues[queue]) < self.team_size * 2:
             raise NotEnoughPlayersError('Not enough players!')
 
         candidates = list(self.queues[queue])
         random.shuffle(candidates)
-        players = candidates[:Organiser.TEAM_SIZE * 2]
-        team_one = players[Organiser.TEAM_SIZE:]
-        team_two = players[:Organiser.TEAM_SIZE]
+        players = candidates[:self.team_size * 2]
+        team_one = players[self.team_size:]
+        team_two = players[:self.team_size]
         for player in players:
             self.queues[queue].remove(player)
         return team_one, team_two

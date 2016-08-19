@@ -19,7 +19,7 @@ def main():
         with open('config.json') as f:
             config = json.load(f)
 
-    bot = GatherBot()
+    bot = GatherBot(config.get('team_size', 5))
     bot.register_action('^!help$', commands.bot_help)
     bot.register_action('^!(?:add|s)$', commands.add)
     bot.register_action('^!(?:remove|so)$', commands.remove)

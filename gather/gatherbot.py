@@ -8,10 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class GatherBot(ListenerBot):
-    def __init__(self):
+    def __init__(self, team_size):
         super().__init__()
 
-        self.organiser = Organiser()
+        self.organiser = Organiser(team_size)
         self.client = discord.Client()
 
         @self.client.event
@@ -44,7 +44,7 @@ class GatherBot(ListenerBot):
             channel,
             'Currently signed in players ({0}/{1}): {2}.'.format(
                 len(self.organiser.queues[channel]),
-                self.organiser.TEAM_SIZE * 2,
+                self.organiser.team_size * 2,
                 ', '.join([str(p) for p in self.organiser.queues[channel]])
             )
         )
