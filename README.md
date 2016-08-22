@@ -3,9 +3,7 @@
 
 ## A basic discord bot for Dota 2 pickup games.
 
-Currently this just waits for 10 players to sign in, then shuffles them up
-and splits them into two teams. There's a lot more to do before it's good,
-just wanted to get what I'd done online.
+This is a very lightweight bot for organising pickup games on Discord. It has no tracking and no matchmaking. It simply maintains a queue of players who wish to play and prints out two randomised teams when enough people are signed in.
 
 ## To use:
 
