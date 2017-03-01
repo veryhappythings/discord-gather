@@ -32,6 +32,9 @@ class Organiser:
     def ready(self, queue):
         return len(self.queues[queue]) >= Organiser.TEAM_SIZE * 2
 
+    def is_not_ready(self, queue):
+        return not self.ready(queue)
+
     def pop_teams(self, queue):
         if len(self.queues[queue]) < Organiser.TEAM_SIZE * 2:
             raise NotEnoughPlayersError('Pas assez de joueurs inscrits !')

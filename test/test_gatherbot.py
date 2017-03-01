@@ -7,7 +7,7 @@ class TestGatherBot(unittest.TestCase):
         bot = GatherBot()
         bot.organiser.queues['testchannel'] = set()
         self.assertEqual(
-            '(0/10)',
+            '(0/12)',
             bot.player_count_display('testchannel')
         )
 
@@ -15,6 +15,6 @@ class TestGatherBot(unittest.TestCase):
         bot = GatherBot()
         bot.organiser.queues['testchannel'] = set(['player1', 'player2'])
         self.assertEqual(
-            '(2/10)',
+            '(2/12)',
             bot.player_count_display('testchannel')
         )

@@ -25,6 +25,10 @@ async def game_status(bot, channel, author, message):
         await bot.announce_players(channel)
     else:
         await bot.say(channel, 'Aucun joueur inscrit pour le moment. Commencez un PUG en tapant "!add".')
+    if bot.afk_organiser.queues[channel]:
+        await bot.announce_afk_players(channel)
+    else:
+        await bot.say(channel, 'Aucun joueur AFK.')
 
 
 def format_team(players):
@@ -33,16 +37,25 @@ def format_team(players):
 
 async def add(bot, channel, author, message):
     """
-     - !add, !s, !join - Permet de s'inscrire au prochain PUG.
+     - !add, !s, !join - Permet de s'inscrire au prochain PUG. Valable 2h.
     """
-    bot.organiser.add(channel, author)
-    await bot.say(
-        channel,
-        'Tu es maintenant inscrit, {0}. {1}'.format(
-            author,
-            bot.player_count_display(channel)
+    if author not in bot.organiser.queues[channel] and author not in bot.afk_organiser.queues[channel]:
+        bot.organiser.add(channel, author)
+        await bot.say(
+            channel,
+            'Tu es maintenant inscrit, <@{0}>. {1}'.format(
+                author.id,
+                bot.player_count_display(channel)
+            )
         )
-    )
+    else:
+        await bot.say(
+            channel,
+            'Il semble que tu sois déjà inscrit, <@{0}>. {1}'.format(
+                author.id,
+                bot.player_count_display(channel)
+            )
+        )
 
     try:
         team_one, team_two = bot.organiser.pop_teams(channel)
@@ -57,14 +70,14 @@ async def add(bot, channel, author, message):
 
 async def remove(bot, channel, author, message):
     """
-     - !remove, !so, !rem - Permet de se désinscrire du PUG actuel.
+     - !remove, !so, !rem - Permet de se désinscrire du PUG actuel. Se fait automatiquement 2h après l'add.
     """
     try:
         bot.organiser.remove(channel, author)
         await bot.say(
             channel,
-            'Tu es maintenant désinscrit, {0}. {1}'.format(
-                author,
+            'Tu es maintenant désinscrit, <@{0}>. {1}'.format(
+                author.id,
                 bot.player_count_display(channel)
             )
         )
@@ -72,7 +85,7 @@ async def remove(bot, channel, author, message):
         await bot.say(
             channel,
             "On dirait tu n'étais pas inscrit. "
-            "Essaye en tapant !add, {}.".format(author))
+            "Essaye en tapant !add, <@{}>.".format(author.id))
 
 
 async def reset(bot, channel, author, message):
