@@ -103,18 +103,18 @@ class GatherBot(ListenerBot):
     async def announce_players(self, channel):
         await self.say(
             channel,
-            'Nombe de joueurs actuellement inscrits {0}: {1}'.format(
+            'Joueurs actuellement inscrits {0}:\n- {1}'.format(
                 self.player_count_display(channel),
-                ', '.join([str(p) for p in self.organiser.queues[channel]])
+                '\n- '.join([str(p) for p in self.organiser.queues[channel]])
             )
         )
 
     async def announce_afk_players(self, channel):
         await self.say(
             channel,
-            'Nombe de joueurs actuellement inscrits {0}: {1}'.format(
-                self.player_count_display(channel),
-                ', '.join([str(p) for p in self.afk_organiser.queues[channel]])
+            'Joueurs inscrits et actuellement AFK {0}:\n- {1}'.format(
+                len(self.afk_organiser.queues[channel]),
+                '\n- '.join([str(p) for p in self.afk_organiser.queues[channel]])
             )
         )
 
