@@ -1,3 +1,10 @@
+## short-term
 - Add a new message for when the user has already been added
+- Finalize AFK handling
+
+## mid-term
 - Add a timer for each user: after x hours with no PUG, user is removed and mentioned so that he can re add himself if he wants too
-- Externalize translation to allow for more modulation
+
+## long-term
+- Allow optional add of a BNET ID through database
+- Externalize translation to allow for more modulations

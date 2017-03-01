@@ -59,7 +59,7 @@ async def add(bot, channel, author, message):
         pass
 
 
-async def remove(bot, channel, author, message, user):
+async def remove(bot, channel, author, message):
     """
      - !remove, !so, !rem - Permet de se désinscrire du PUG actuel. Se fait automatiquement 2h après l'add.
     """
