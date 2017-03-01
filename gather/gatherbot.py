@@ -12,9 +12,9 @@ class GatherBot(ListenerBot):
     def __init__(self):
         super().__init__()
 
+        self.prompt = "£"
         self.organiser = Organiser()
         self.client = discord.Client()
-        self.prompt = '£'
 
         @self.client.event
         async def on_ready():
