@@ -2,8 +2,9 @@
 import os
 import logging
 import json
-from gather.gatherbot import GatherBot
+
 from gather import commands
+from gather.gatherbot import GatherBot
 
 
 def main():
