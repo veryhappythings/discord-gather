@@ -34,7 +34,7 @@ class Organiser:
 
     def pop_teams(self, queue):
         if len(self.queues[queue]) < Organiser.TEAM_SIZE * 2:
-            raise NotEnoughPlayersError('Not enough players!')
+            raise NotEnoughPlayersError('Pas assez de joueurs inscrits !')
 
         candidates = list(self.queues[queue])
         random.shuffle(candidates)

@@ -3,6 +3,8 @@ import os
 import logging
 import json
 
+import discord
+
 from gather import commands
 from gather.gatherbot import GatherBot
 
@@ -26,8 +28,8 @@ def main():
     bot.register_action('^!(?:remove|rem|so)$', commands.remove)
     bot.register_action('^!(?:game|status)$', commands.game_status)
     bot.register_action('^!(?:reset)$', commands.reset)
-
     bot.run(config['token'])
+
 
 if __name__ == '__main__':
     main()

@@ -24,6 +24,7 @@ class GatherBot(ListenerBot):
 
             self.username = self.client.user.name
 
+
         @self.client.event
         async def on_message(message):
             # FIXME: These are still objects, and perhaps they need to be?
@@ -40,7 +41,7 @@ class GatherBot(ListenerBot):
                         self.organiser.remove(channel, before)
                         await self.say(
                             channel,
-                            '{0} was signed in but went offline. {1}'.format(
+                            '{0} s\était inscrit mais s\'est déconnecté. {1}'.format(
                                 before,
                                 self.player_count_display(channel)
                             )
@@ -61,7 +62,7 @@ class GatherBot(ListenerBot):
     async def announce_players(self, channel):
         await self.say(
             channel,
-            'Currently signed in players {0}: {1}'.format(
+            'Nombe de joueurs actuellement inscrits {0}: {1}'.format(
                 self.player_count_display(channel),
                 ', '.join([str(p) for p in self.organiser.queues[channel]])
             )
