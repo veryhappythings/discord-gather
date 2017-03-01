@@ -30,7 +30,7 @@ def format_team(players):
 
 async def add(bot, channel, author, message):
     """
-     - £add, £s - add yourself to the pool
+     - £add, £s, £join - add yourself to the pool
     """
     bot.organiser.add(channel, author)
     await bot.say(
@@ -54,7 +54,7 @@ async def add(bot, channel, author, message):
 
 async def remove(bot, channel, author, message):
     """
-     - £remove, £so - remove yourself from the pool
+     - £remove, £so, £rem - remove yourself from the pool
     """
     try:
         bot.organiser.remove(channel, author)
