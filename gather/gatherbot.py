@@ -1,3 +1,4 @@
+# coding=utf-8
 import logging
 import discord
 from gather.bot import ListenerBot
@@ -13,6 +14,7 @@ class GatherBot(ListenerBot):
 
         self.organiser = Organiser()
         self.client = discord.Client()
+        self.prompt = '£'
 
         @self.client.event
         async def on_ready():
