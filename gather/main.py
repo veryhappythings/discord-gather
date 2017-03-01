@@ -2,7 +2,9 @@
 import os
 import logging
 import json
-from gather.gatherbot import GatherBot
+
+from gather import gatherbot
+from gather.gatherbot import *
 from gather import commands
 
 
@@ -20,11 +22,11 @@ def main():
             config = json.load(f)
 
     bot = GatherBot()
-    bot.register_action('^'+bot.prompt+'help$', commands.bot_help)
-    bot.register_action('^'+bot.prompt+'(?:add|join|s)$', commands.add)
-    bot.register_action('^'+bot.prompt+'(?:remove|rem|so)$', commands.remove)
-    bot.register_action('^'+bot.prompt+'(?:game|status)$', commands.game_status)
-    bot.register_action('^'+bot.prompt+'(?:reset)$', commands.reset)
+    bot.register_action('^'+gatherbot.prompt+'help$', commands.bot_help)
+    bot.register_action('^'+gatherbot.prompt+'(?:add|join|s)$', commands.add)
+    bot.register_action('^'+gatherbot.prompt+'(?:remove|rem|so)$', commands.remove)
+    bot.register_action('^'+gatherbot.prompt+'(?:game|status)$', commands.game_status)
+    bot.register_action('^'+gatherbot.prompt+'(?:reset)$', commands.reset)
 
     bot.run(config['token'])
 

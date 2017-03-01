@@ -7,12 +7,11 @@ from gather.organiser import Organiser
 
 logger = logging.getLogger(__name__)
 
+prompt = "£"
 
 class GatherBot(ListenerBot):
     def __init__(self):
         super().__init__()
-
-        self.prompt = "£"
         self.organiser = Organiser()
         self.client = discord.Client()
 
