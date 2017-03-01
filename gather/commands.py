@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from gather.organiser import NotEnoughPlayersError, PlayerNotFoundError
 
 
