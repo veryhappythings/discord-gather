@@ -1,0 +1,3 @@
+- Add a new message for when the user has already been added
+- Add a timer for each user: after x hours with no PUG, user is removed and mentioned so that he can re add himself if he wants too
+- Externalize translation to allow for more modulation
