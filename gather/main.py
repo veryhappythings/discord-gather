@@ -3,8 +3,6 @@ import os
 import logging
 import json
 
-import discord
-
 from gather import commands
 from gather.gatherbot import GatherBot
 
