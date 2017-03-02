@@ -39,14 +39,23 @@ async def add(bot, channel, author, message):
     """
      - !add, !s, !join - Permet de s'inscrire au prochain PUG. Valable 2h.
     """
-    bot.organiser.add(channel, author)
-    await bot.say(
-        channel,
-        'Tu es maintenant inscrit, <@{0}>. {1}'.format(
-            author.id,
-            bot.player_count_display(channel)
+    if author not in bot.organiser.queues[channel] and author not in bot.afk_organiser.queues[channel]:
+        bot.organiser.add(channel, author)
+        await bot.say(
+            channel,
+            'Tu es maintenant inscrit, <@{0}>. {1}'.format(
+                author.id,
+                bot.player_count_display(channel)
+            )
         )
-    )
+    else:
+        await bot.say(
+            channel,
+            'Il semble que tu sois déjà inscrit, <@{0}>. {1}'.format(
+                author.id,
+                bot.player_count_display(channel)
+            )
+        )
 
     try:
         team_one, team_two = bot.organiser.pop_teams(channel)
@@ -59,7 +68,7 @@ async def add(bot, channel, author, message):
         pass
 
 
-async def remove(bot, channel, author, message, user):
+async def remove(bot, channel, author, message):
     """
      - !remove, !so, !rem - Permet de se désinscrire du PUG actuel. Se fait automatiquement 2h après l'add.
     """

@@ -47,7 +47,6 @@ class GatherBot(ListenerBot):
                                 self.player_count_display(channel)
                             )
                         )
-                        await self.announce_players(channel)
 
             # If the user passes in idle mode (AFK)
             elif before.status == discord.Status.online and after.status == discord.Status.idle:
@@ -62,12 +61,12 @@ class GatherBot(ListenerBot):
                         self.afk_organiser.add(channel, before)
                         await self.say(
                             channel,
-                            '{0} s\était inscrit mais est passé AFK. {1}'.format(
+                            '{0} s\'était inscrit mais est passé AFK. Il ne fait plus partie de la liste d\'attente '
+                            'jusqu\'à son retour. {1}'.format(
                                 before.nick,
                                 self.player_count_display(channel)
                             )
                         )
-                        await self.announce_players(channel)
 
             # If user was AFK and comes back online
             elif before.status == discord.Status.idle and after.status == discord.Status.online:
@@ -77,7 +76,7 @@ class GatherBot(ListenerBot):
                         continue
 
                     # If the user was AFK before, and that the current PUG is not ready, then add it again
-                    if before in self.afk_organiser.queues[channel] & self.organiser.is_not_ready(channel):
+                    if (before in self.afk_organiser.queues[channel]) & self.organiser.is_not_ready(channel):
                         self.afk_organiser.remove(channel, before)
                         self.organiser.add(channel, before)
                         await self.say(
@@ -87,7 +86,6 @@ class GatherBot(ListenerBot):
                                 self.player_count_display(channel)
                             )
                         )
-                        await self.announce_players(channel)
 
     def run(self, token):
         self.token = token
@@ -103,18 +101,18 @@ class GatherBot(ListenerBot):
     async def announce_players(self, channel):
         await self.say(
             channel,
-            'Nombe de joueurs actuellement inscrits {0}: {1}'.format(
+            '{0} joueurs actuellement inscrits :\n- {1}'.format(
                 self.player_count_display(channel),
-                ', '.join([str(p) for p in self.organiser.queues[channel]])
+                '\n- '.join([str(p) for p in self.organiser.queues[channel]])
             )
         )
 
     async def announce_afk_players(self, channel):
         await self.say(
             channel,
-            'Nombe de joueurs actuellement inscrits {0}: {1}'.format(
-                self.player_count_display(channel),
-                ', '.join([str(p) for p in self.afk_organiser.queues[channel]])
+            '{0} joueurs inscrits et actuellement AFK :\n- {1}'.format(
+                len(self.afk_organiser.queues[channel]),
+                '\n- '.join([str(p) for p in self.afk_organiser.queues[channel]])
             )
         )
 
