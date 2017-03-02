@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import random
 from collections import defaultdict
 
@@ -11,7 +12,7 @@ class PlayerNotFoundError(Exception):
 
 
 class Organiser:
-    TEAM_SIZE = 5
+    TEAM_SIZE = 6
 
     def __init__(self):
         self.queues = defaultdict(lambda: set())
@@ -31,9 +32,12 @@ class Organiser:
     def ready(self, queue):
         return len(self.queues[queue]) >= Organiser.TEAM_SIZE * 2
 
+    def is_not_ready(self, queue):
+        return not self.ready(queue)
+
     def pop_teams(self, queue):
         if len(self.queues[queue]) < Organiser.TEAM_SIZE * 2:
-            raise NotEnoughPlayersError('Not enough players!')
+            raise NotEnoughPlayersError('Pas assez de joueurs inscrits !')
 
         candidates = list(self.queues[queue])
         random.shuffle(candidates)
