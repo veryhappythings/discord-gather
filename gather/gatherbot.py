@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import logging
 import discord
 from gather.bot import ListenerBot

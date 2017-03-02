@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-import discord
-
 from gather.organiser import NotEnoughPlayersError, PlayerNotFoundError
 
 

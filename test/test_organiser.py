@@ -58,7 +58,7 @@ class TestOrganiser(unittest.TestCase):
         teams = organiser.pop_teams('test')
         self.assertEqual(Organiser.TEAM_SIZE, len(teams[0]))
         self.assertEqual(Organiser.TEAM_SIZE, len(teams[1]))
-        self.assertEqual(6, len(organiser.queues['test']))
+        self.assertEqual(5, len(organiser.queues['test']))
 
     def test_pop_teams_validates_queue_size(self):
         organiser = Organiser()
