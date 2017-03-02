@@ -19,16 +19,16 @@ async def bot_help(bot, channel, author, message):
 
 async def game_status(bot, channel, author, message):
     """
-     - !game, !status - Permet de connaître le statut du PUG en cours.
+     - !game, !status - check current game status
     """
     if bot.organiser.queues[channel]:
         await bot.announce_players(channel)
     else:
-        await bot.say(channel, 'Aucun joueur inscrit pour le moment. Commencez un PUG en tapant "!add".')
+        await bot.say(channel, 'No players currently signed in. You can start a game by typing "!add".')
     if bot.afk_organiser.queues[channel]:
         await bot.announce_afk_players(channel)
     else:
-        await bot.say(channel, 'Aucun joueur AFK.')
+        await bot.say(channel, 'No AFK players.')
 
 
 def format_team(players):
@@ -37,13 +37,13 @@ def format_team(players):
 
 async def add(bot, channel, author, message):
     """
-     - !add, !s, !join - Permet de s'inscrire au prochain PUG. Valable 2h.
+     - !add, !s, !join - add yourself to the pool
     """
     if author not in bot.organiser.queues[channel] and author not in bot.afk_organiser.queues[channel]:
         bot.organiser.add(channel, author)
         await bot.say(
             channel,
-            'Tu es maintenant inscrit, <@{0}>. {1}'.format(
+            'You are now signed in, <@{0}>. {1}'.format(
                 author.id,
                 bot.player_count_display(channel)
             )
@@ -51,7 +51,7 @@ async def add(bot, channel, author, message):
     else:
         await bot.say(
             channel,
-            'Il semble que tu sois déjà inscrit, <@{0}>. {1}'.format(
+            'It seems you\'ve already registered, <@{0}>. {1}'.format(
                 author.id,
                 bot.player_count_display(channel)
             )
@@ -63,20 +63,20 @@ async def add(bot, channel, author, message):
         team_two = format_team(team_two)
         await bot.say(
             channel,
-            'Le PUG peut démarrer !\nTeam 1 : {}\nTeam 2 : {}'.format(team_one, team_two))
+            'Game starting!\nTeam 1 : {}\nTeam 2 : {}'.format(team_one, team_two))
     except NotEnoughPlayersError:
         pass
 
 
 async def remove(bot, channel, author, message):
     """
-     - !remove, !so, !rem - Permet de se désinscrire du PUG actuel. Se fait automatiquement 2h après l'add.
+     - !remove, !so, !rem - remove yourself from the pool
     """
     try:
         bot.organiser.remove(channel, author)
         await bot.say(
             channel,
-            'Tu es maintenant désinscrit, <@{0}>. {1}'.format(
+            'You are now signed out, <@{0}>. {1}'.format(
                 author.id,
                 bot.player_count_display(channel)
             )
@@ -84,14 +84,14 @@ async def remove(bot, channel, author, message):
     except PlayerNotFoundError:
         await bot.say(
             channel,
-            "On dirait tu n'étais pas inscrit. "
-            "Essaye en tapant !add, <@{}>.".format(author.id))
+            "Doesn't look like you are signed in. "
+            "Try signing in with !add, <@{}>.".format(author.id))
 
 
 async def reset(bot, channel, author, message):
     """
-     - !reset - Réinitialise le PUG en cours.
+     - !reset - Empty the pool for this channel
     """
     if channel.permissions_for(author).administrator:
         bot.organiser.reset(channel)
-        await bot.say(channel, 'PUG réinitialisé.')
+        await bot.say(channel, 'Channel pool reset.')
