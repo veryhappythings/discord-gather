@@ -14,7 +14,7 @@ class TestCommands(unittest.TestCase):
 
     def test_format_team(self):
         self.assertEqual(
-            "TestPlayer\nTestPlayer2\nTestPlayer3",
+            "TestPlayer\n TestPlayer2\n TestPlayer3",
             commands.format_team(['TestPlayer', 'TestPlayer2', 'TestPlayer3'])
         )
 
