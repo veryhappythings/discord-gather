@@ -62,8 +62,8 @@ class GatherBot(ListenerBot):
                         self.afk_organiser.add(channel, before)
                         await self.say(
                             channel,
-                            '<@{0}> s\était inscrit mais est passé AFK. {1}'.format(
-                                before.id,
+                            '{0} s\était inscrit mais est passé AFK. {1}'.format(
+                                before.nick,
                                 self.player_count_display(channel)
                             )
                         )
@@ -82,8 +82,8 @@ class GatherBot(ListenerBot):
                         self.organiser.add(channel, before)
                         await self.say(
                             channel,
-                            '<@{0}> était passé AFK après s\'être inscrit. Il repasse dans la file d\'attente. {1}'.format(
-                                before.id,
+                            '{0} était passé AFK après s\'être inscrit. Il repasse dans la file d\'attente. {1}'.format(
+                                before.nick,
                                 self.player_count_display(channel)
                             )
                         )
