@@ -7,8 +7,6 @@ from gather.organiser import Organiser
 
 logger = logging.getLogger(__name__)
 
-prompt = "£"
-
 
 class GatherBot(ListenerBot):
     def __init__(self):
@@ -42,7 +40,7 @@ class GatherBot(ListenerBot):
                         self.organiser.remove(channel, before)
                         await self.say(
                             channel,
-                            '<@{0}> s\était inscrit mais s\'est déconnecté. {1}'.format(
+                            '<@{0}> was signed in but went offline. {1}'.format(
                                 before.id,
                                 self.player_count_display(channel)
                             )
@@ -61,8 +59,8 @@ class GatherBot(ListenerBot):
                         self.afk_organiser.add(channel, before)
                         await self.say(
                             channel,
-                            '{0} s\'était inscrit mais est passé AFK. Il ne fait plus partie de la liste d\'attente '
-                            'jusqu\'à son retour. {1}'.format(
+                            '{0} was signed in but went AFK and is temporarily no longer in the queue '
+                            '{1}'.format(
                                 before,
                                 self.player_count_display(channel)
                             )
@@ -81,7 +79,17 @@ class GatherBot(ListenerBot):
                         self.organiser.add(channel, before)
                         await self.say(
                             channel,
-                            '{0} était passé AFK après s\'être inscrit. Il repasse dans la file d\'attente. {1}'.format(
+                            '{0} is back from AFK and now in the ongoing queue. {1}'.format(
+                                before,
+                                self.player_count_display(channel)
+                            )
+                        )
+                    # Should not happen as queue is emptied right after it's full
+                    else:
+                        self.afk_organiser.remove(channel, before)
+                        await self.say(
+                            channel,
+                            '{0} is back from AFK but the queue is full. {1}'.format(
                                 before,
                                 self.player_count_display(channel)
                             )
@@ -101,7 +109,7 @@ class GatherBot(ListenerBot):
     async def announce_players(self, channel):
         await self.say(
             channel,
-            '{0} joueurs actuellement inscrits :\n- {1}'.format(
+            '{0} currently signed in players :\n- {1}'.format(
                 self.player_count_display(channel),
                 '\n- '.join([str(p) for p in self.organiser.queues[channel]])
             )
@@ -110,7 +118,7 @@ class GatherBot(ListenerBot):
     async def announce_afk_players(self, channel):
         await self.say(
             channel,
-            '{0} joueurs inscrits et actuellement AFK :\n- {1}'.format(
+            '{0} currently signed in but AFK players :\n- {1}'.format(
                 len(self.afk_organiser.queues[channel]),
                 '\n- '.join([str(p) for p in self.afk_organiser.queues[channel]])
             )
