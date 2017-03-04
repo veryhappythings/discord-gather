@@ -31,6 +31,7 @@ class GatherBot(ListenerBot):
             f.seek(0)
             f.write(json.dumps(config))
             f.truncate()
+            logger.info(feat + ' feature is disabled.')
 
         @self.client.event
         async def on_ready():
