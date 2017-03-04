@@ -115,7 +115,6 @@ async def toggle(bot, channel, author, message):
             toggable_keys += key + ", "
             if bot.toggable_feats[key]:
                 togged_on_feats += key + ", "
-                togged_on_feats_list.append(key)
 
         if toggable_keys[:-2] == "":
             toggable_keys = "none"
