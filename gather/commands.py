@@ -89,6 +89,6 @@ async def reset(bot, channel, author, message):
     """
      - !reset - Empty the pool for this channel
     """
-    if channel.permissions_for(author).administrator:
+    if channel.permissions_for(author).manage_server:
         bot.organiser.reset(channel)
         await bot.say(channel, 'Channel pool reset.')
