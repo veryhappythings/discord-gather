@@ -38,6 +38,13 @@ class TestOrganiser(unittest.TestCase):
             organiser.queues['test'].add('testplayer{0}'.format(i))
         self.assertTrue(organiser.ready('test'))
 
+    def test_is_not_ready(self):
+        organiser = Organiser()
+        self.assertTrue(organiser.is_not_ready('test'))
+        for i in range(Organiser.TEAM_SIZE):
+            organiser.queues['test'].add('testplayer{0}'.format(i))
+        self.assertTrue(organiser.is_not_ready('test'))
+
     def test_pop_teams(self):
         organiser = Organiser()
         for i in range(Organiser.TEAM_SIZE * 2):

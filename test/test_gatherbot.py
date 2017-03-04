@@ -13,7 +13,7 @@ class TestGatherBot(unittest.TestCase):
 
     def test_player_count_display_with_players(self):
         bot = GatherBot()
-        bot.organiser.queues['testchannel'] = set(['player1', 'player2'])
+        bot.organiser.queues['testchannel'] = {'player1', 'player2'}
         self.assertEqual(
             '(2/10)',
             bot.player_count_display('testchannel')
