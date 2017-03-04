@@ -100,7 +100,7 @@ async def reset(bot, channel, author, message):
 
 async def toggle(bot, channel, author, message):
     """
-     - !toggle <fonctionnalité> - Turns a feature ON/OFF. !toggle to know available features
+     - !toggle <feature> - Turns a feature ON/OFF. !toggle to know available features
     """
 
     if channel.permissions_for(author).manage_server:
