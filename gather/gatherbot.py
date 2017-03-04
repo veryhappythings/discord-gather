@@ -1,3 +1,4 @@
+import json
 import logging
 import discord
 from gather.bot import ListenerBot
@@ -13,6 +14,17 @@ class GatherBot(ListenerBot):
         self.organiser = Organiser()
         self.afk_organiser = Organiser()
         self.client = discord.Client()
+        self.toggable_feats = {'AFK': False}
+
+        with open('config.json') as f:
+            config = json.load(f)
+            for feat in self.toggable_feats.keys():
+                print(feat)
+                if feat in config['togged_on_features']:
+                    self.toggable_feats[feat] = True
+                    logger.info(feat + ' feature is enabled.')
+                else:
+                    logger.info(feat + ' feature is disabled.')
 
         @self.client.event
         async def on_ready():
@@ -46,7 +58,8 @@ class GatherBot(ListenerBot):
                         )
 
             # If the user passes in idle mode (AFK)
-            elif before.status == discord.Status.online and after.status == discord.Status.idle:
+            elif before.status == discord.Status.online and after.status == discord.Status.idle\
+                    and self.toggable_feats['AFK'] is True:
                 for channel in self.organiser.queues:
 
                     if channel.server != before.server:
@@ -66,7 +79,8 @@ class GatherBot(ListenerBot):
                         )
 
             # If user was AFK and comes back online
-            elif before.status == discord.Status.idle and after.status == discord.Status.online:
+            elif before.status == discord.Status.idle and after.status == discord.Status.online\
+                    and self.toggable_feats['AFK'] is True:
                 for channel in self.organiser.queues:
 
                     if channel.server != before.server:

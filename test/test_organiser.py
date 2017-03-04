@@ -8,13 +8,13 @@ class TestOrganiser(unittest.TestCase):
 
         self.assertEqual(set(), organiser.queues['test'])
         organiser.add('test', 'testplayer')
-        self.assertEqual(set(['testplayer']), organiser.queues['test'])
+        self.assertEqual({'testplayer'}, organiser.queues['test'])
 
     def test_remove(self):
         organiser = Organiser()
 
-        organiser.queues['test'] = set(['testplayer'])
-        self.assertEqual(set(['testplayer']), organiser.queues['test'])
+        organiser.queues['test'] = {'testplayer'}
+        self.assertEqual({'testplayer'}, organiser.queues['test'])
         organiser.remove('test', 'testplayer')
         self.assertEqual(set(), organiser.queues['test'])
 
@@ -26,8 +26,8 @@ class TestOrganiser(unittest.TestCase):
     def test_reset(self):
         organiser = Organiser()
 
-        organiser.queues['test'] = set(['testplayer'])
-        self.assertEqual(set(['testplayer']), organiser.queues['test'])
+        organiser.queues['test'] = {'testplayer'}
+        self.assertEqual({'testplayer'}, organiser.queues['test'])
         organiser.reset('test')
         self.assertEqual(set(), organiser.queues['test'])
 

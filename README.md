@@ -11,7 +11,7 @@ This is a very lightweight bot for organising pickup games on Discord. It has no
 * Add your bot to your guild by constructing a link from this https://discordapp.com/developers/docs/topics/oauth2#adding-bots-to-guilds - The permissions you will need are 3072, so your link will take the form https://discordapp.com/oauth2/authorize?client_id=<your bot id>&scope=bot&permissions=3072
 * Install python 3.5
 * `pip install .` - if you intend to edit the code, use `pip install -e .`
-* Put your bot's token into config.json (see config.json.example)
+* Put your bot's token into config.json (see config.json.example). Do not modify the togged_on_features field, it will be automatically updated by the bot.
 * Run `discord-gather`
 * Type !help in any Discord channel that the bot resides in for more information.
 
