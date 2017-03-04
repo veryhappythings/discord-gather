@@ -16,15 +16,21 @@ class GatherBot(ListenerBot):
         self.client = discord.Client()
         self.toggable_feats = {'AFK': False}
 
-        with open('config.json') as f:
-            config = json.load(f)
-            for feat in self.toggable_feats.keys():
-                print(feat)
-                if feat in config['togged_on_features']:
-                    self.toggable_feats[feat] = True
-                    logger.info(feat + ' feature is enabled.')
-                else:
-                    logger.info(feat + ' feature is disabled.')
+        try:
+            with open('config.json', mode='r+', encoding='utf-8') as f:
+                config = json.load(f)
+                for feat in self.toggable_feats.keys():
+                    print(feat)
+                    if feat in config['togged_on_features']:
+                        self.toggable_feats[feat] = True
+                        logger.info(feat + ' feature is enabled.')
+                    else:
+                        logger.info(feat + ' feature is disabled.')
+        except KeyError:
+            config.update({"togged_on_features": "[]"})
+            f.seek(0)
+            f.write(json.dumps(config))
+            f.truncate()
 
         @self.client.event
         async def on_ready():
