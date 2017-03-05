@@ -1,4 +1,4 @@
-
+# coding: utf8
 import logging
 import re
 
@@ -34,7 +34,7 @@ class ListenerBot:
                         await fn(self, channel, author, content, *match.groups())
                     except Exception as e:
                         logger.exception(e)
-                        await self.say(channel, 'Something went wrong with that command.')
+                        await self.say(channel, _('Something went wrong with that command.'))
                     break
 
     async def say(self, channel, message):

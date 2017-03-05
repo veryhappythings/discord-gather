@@ -1,0 +1,234 @@
+# Translation base file for discord bot discord-gather
+# Copyright (C) 2017
+# Doezer <doezerx@gmail.com>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: discord-gather\n"
+"POT-Creation-Date: 2017-03-05 16:20+0100\n"
+"PO-Revision-Date: 2017-03-05 16:23+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 1.8.12\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: bot.py:10
+msgid ""
+" Abstract bot that understands the idea of listening for a message and\n"
+"    calling a function based on the contents of the message.\n"
+"\n"
+"    Not sure if this is a useful abstraction, but it does allow for easy "
+"testing\n"
+"    of this code.\n"
+"    "
+msgstr ""
+" Abstract bot that understands the idea of listening for a message and\n"
+"    calling a function based on the contents of the message.\n"
+"\n"
+"    Not sure if this is a useful abstraction, but it does allow for easy "
+"testing\n"
+"    of this code.\n"
+"    "
+
+#: bot.py:37
+msgid "Something went wrong with that command."
+msgstr "Une erreur s'est produite."
+
+#: commands.py:21
+msgid ""
+"\n"
+"     - !game, !status - check current game status\n"
+"    "
+msgstr ""
+"\n"
+"    - !game, !status - Permet de connaître le statut de la partie en cours.\n"
+"    "
+
+#: commands.py:27
+msgid ""
+"No players currently signed in. You can start a game by typing \"!add\"."
+msgstr ""
+"Aucun joueur inscrit pour le moment. Commencez un PUG en tapant \\\"!add\\\"."
+
+#: commands.py:31
+msgid "No AFK players."
+msgstr "Aucun joueur AFK."
+
+#: commands.py:39
+msgid ""
+"\n"
+"     - !add, !s - add yourself to the pool.\n"
+"    "
+msgstr ""
+"\n"
+"    - !add, !s, !join - Permet de s'inscrire pour la prochaine partie.\n"
+"    "
+
+#: commands.py:46
+msgid "You are now signed in, <@{0}>. {1}"
+msgstr "Tu es maintenant inscrit(e), <@{0}>. {1}"
+
+#: commands.py:54
+msgid "It seems you have already signed in, <@{0}>. {1}"
+msgstr "Il semble que tu sois déjà inscrit(e), <@{0}>. {1}"
+
+#: commands.py:66
+msgid ""
+"Game starting!\n"
+"Team: {}"
+msgstr ""
+"La partie peut démarrer !\n"
+"Team : {}"
+
+#: commands.py:77
+msgid ""
+"Game starting!\n"
+"Team 1: {}\n"
+"Team 2: {}"
+msgstr ""
+"La partie peut démarrer !\n"
+"Team 1 : {}\n"
+"Team 2 : {}"
+
+#: commands.py:83
+msgid ""
+"\n"
+"     - !remove, !so - remove yourself from the pool.\n"
+"    "
+msgstr ""
+"\n"
+"     - !remove, !so - Permet de se désinscrire de la partie actuelle.\n"
+"    "
+
+#: commands.py:90
+msgid "You are now signed out, <@{0}>. {1}"
+msgstr "Tu es maintenant désinscrit(e), <@{0}>. {1}"
+
+#: commands.py:98
+msgid "Doesn't look like you are signed in. Try signing in with !add, <@{}>."
+msgstr "On dirait tu n'étais pas inscrit(e). Essaye en tapant !add, <@{}>."
+
+#: commands.py:102
+msgid ""
+"\n"
+"     - !reset - Empty the pool for this channel.\n"
+"    "
+msgstr ""
+"\n"
+"\n"
+"     - !reset - Réinitialise la partie en cours.\n"
+"    "
+
+#: commands.py:107
+msgid "Channel pool reset."
+msgstr "Partie réinitialisée."
+
+#: commands.py:109 commands.py:173 commands.py:209
+msgid "You do not have the required permission: manage server."
+msgstr "Vous n'avez pas la permission nécessaire : gérer le serveur."
+
+#: commands.py:113
+msgid ""
+"\n"
+"     - !toggle <feature> - turns a feature ON/OFF. !toggle to see the "
+"available features.\n"
+"    "
+msgstr ""
+"\n"
+"     - !toggle <fonctionnalité> - Désactive ou active une fonctionnalité. !"
+"toggle pour voir les fonctionnalités.\n"
+"     disponibles.\\n\n"
+"    "
+
+#: commands.py:130 commands.py:135 commands.py:148
+msgid "none"
+msgstr "aucune"
+
+#: commands.py:161
+msgid "The {} feature is now enabled."
+msgstr "La fonctionnalité {} est maintenant activée."
+
+#: commands.py:163
+msgid "The {} feature is now disabled."
+msgstr "La fonctionnalité {} est maintenant désactivée."
+
+#: commands.py:166
+msgid ""
+"The feature does not exist or the parameter is incorrect.\n"
+"Available features: {1}\n"
+"Enabled features: {2}"
+msgstr ""
+"La fonctionnalité n'existe pas ou l'argument reçu n'est pas valable.\n"
+"Fonctionnalités disponibles : {1}\n"
+"Fonctionnalités actives : {2}"
+
+#: commands.py:177
+msgid ""
+"\n"
+"     - !language <language> - set language (\"en\" or \"fr\")\n"
+"    "
+msgstr ""
+"\n"
+"     - !language <langage> - Définit le langage du bot (\"en\" ou \"fr\")\n"
+"    "
+
+#: commands.py:203
+msgid "Language {} is now enabled."
+msgstr "Le langage {} est maintenant activé."
+
+#: commands.py:205
+msgid ""
+"The language is not available.\n"
+"Available languages: fr, en"
+msgstr ""
+"Ce langage n'est pas disponible.\n"
+"Langages disponibles : fr, en"
+
+#: gatherbot.py:74
+msgid "<@{0}> was signed in but went offline. {1}"
+msgstr "<@{0}> s'était inscrit(e) mais s'est déconnecté. {1}"
+
+#: gatherbot.py:94
+msgid ""
+"{0} signed in but is now AFK and is temporarily no longer part of the queue. "
+"{1}"
+msgstr ""
+"{0} s'était inscrit(e) mais est passé(e) AFK, et ne fait plus partie de la "
+"liste d'attente jusqu'à son retour. {1}"
+
+#: gatherbot.py:111
+msgid "{0} is back from AFK and re-enters the queue. {1}"
+msgstr "{0} n'est plus AFK et repasse dans la file d'attente. {1}"
+
+#: gatherbot.py:119
+msgid "{0} is back from AFK but queue is full! Error {1}"
+msgstr "{0} est de retour mais la file est pleine ! ERREUR {1}"
+
+#: gatherbot.py:139
+msgid ""
+"Currently signed in players {0}:\n"
+"- {1}"
+msgstr ""
+"{0} joueurs actuellement inscrits :\n"
+"- {1}"
+
+#: gatherbot.py:148
+msgid ""
+"Currently signed in and AFK players {0} :\n"
+"- {1}"
+msgstr ""
+"{0} joueurs inscrits et actuellement AFK :\n"
+"- {1}"
+
+#: gatherbot.py:156 gatherbot.py:161
+msgid "({0}/{1})"
+msgstr "({0}/{1})"
+
+#: organiser.py:44 organiser.py:57
+msgid "Not enough players!"
+msgstr "Pas assez de joueurs inscrits !"
