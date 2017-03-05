@@ -1,0 +1,190 @@
+# Translation base file for discord bot discord-gather
+# Copyright (C) 2017
+# Doezer <doezerx@gmail.com>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: discord-gather\n"
+"POT-Creation-Date: 2017-03-05 16:19+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: bot.py:10
+#, docstring
+msgid ""
+" Abstract bot that understands the idea of listening for a message and\n"
+"    calling a function based on the contents of the message.\n"
+"\n"
+"    Not sure if this is a useful abstraction, but it does allow for easy testing\n"
+"    of this code.\n"
+"    "
+msgstr ""
+
+#: bot.py:37
+msgid "Something went wrong with that command."
+msgstr ""
+
+#: commands.py:21
+#, docstring
+msgid ""
+"\n"
+"     - !game, !status - check current game status\n"
+"    "
+msgstr ""
+
+#: commands.py:27
+msgid "No players currently signed in. You can start a game by typing \"!add\"."
+msgstr ""
+
+#: commands.py:31
+msgid "No AFK players."
+msgstr ""
+
+#: commands.py:39
+#, docstring
+msgid ""
+"\n"
+"     - !add, !s - add yourself to the pool.\n"
+"    "
+msgstr ""
+
+#: commands.py:46
+msgid "You are now signed in, <@{0}>. {1}"
+msgstr ""
+
+#: commands.py:54
+msgid "It seems you have already signed in, <@{0}>. {1}"
+msgstr ""
+
+#: commands.py:66
+msgid ""
+"Game starting!\n"
+"Team: {}"
+msgstr ""
+
+#: commands.py:77
+msgid ""
+"Game starting!\n"
+"Team 1: {}\n"
+"Team 2: {}"
+msgstr ""
+
+#: commands.py:83
+#, docstring
+msgid ""
+"\n"
+"     - !remove, !so - remove yourself from the pool.\n"
+"    "
+msgstr ""
+
+#: commands.py:90
+msgid "You are now signed out, <@{0}>. {1}"
+msgstr ""
+
+#: commands.py:98
+msgid "Doesn't look like you are signed in. Try signing in with !add, <@{}>."
+msgstr ""
+
+#: commands.py:102
+#, docstring
+msgid ""
+"\n"
+"     - !reset - Empty the pool for this channel.\n"
+"    "
+msgstr ""
+
+#: commands.py:107
+msgid "Channel pool reset."
+msgstr ""
+
+#: commands.py:109 commands.py:173 commands.py:209
+msgid "You do not have the required permission: manage server."
+msgstr ""
+
+#: commands.py:113
+#, docstring
+msgid ""
+"\n"
+"     - !toggle <feature> - turns a feature ON/OFF. !toggle to see the available features.\n"
+"    "
+msgstr ""
+
+#: commands.py:130 commands.py:135 commands.py:148
+msgid "none"
+msgstr ""
+
+#: commands.py:161
+msgid "The {} feature is now enabled."
+msgstr ""
+
+#: commands.py:163
+msgid "The {} feature is now disabled."
+msgstr ""
+
+#: commands.py:166
+msgid ""
+"The feature does not exist or the parameter is incorrect.\n"
+"Available features: {1}\n"
+"Enabled features: {2}"
+msgstr ""
+
+#: commands.py:177
+#, docstring
+msgid ""
+"\n"
+"     - !language <language> - set language (\"en\" or \"fr\")\n"
+"    "
+msgstr ""
+
+#: commands.py:203
+msgid "Language {} is now enabled."
+msgstr ""
+
+#: commands.py:205
+msgid ""
+"The language is not available.\n"
+"Available languages: fr, en"
+msgstr ""
+
+#: gatherbot.py:74
+msgid "<@{0}> was signed in but went offline. {1}"
+msgstr ""
+
+#: gatherbot.py:94
+msgid "{0} signed in but is now AFK and is temporarily no longer part of the queue. {1}"
+msgstr ""
+
+#: gatherbot.py:111
+msgid "{0} is back from AFK and re-enters the queue. {1}"
+msgstr ""
+
+#: gatherbot.py:119
+msgid "{0} is back from AFK but queue is full! Error {1}"
+msgstr ""
+
+#: gatherbot.py:139
+msgid ""
+"Currently signed in players {0}:\n"
+"- {1}"
+msgstr ""
+
+#: gatherbot.py:148
+msgid ""
+"Currently signed in and AFK players {0} :\n"
+"- {1}"
+msgstr ""
+
+#: gatherbot.py:156 gatherbot.py:161
+msgid "({0}/{1})"
+msgstr ""
+
+#: organiser.py:44 organiser.py:57
+msgid "Not enough players!"
+msgstr ""
+

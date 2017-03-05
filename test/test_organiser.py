@@ -1,5 +1,6 @@
 import unittest
 from gather.organiser import Organiser, NotEnoughPlayersError, PlayerNotFoundError
+from gather.gatherbot import GatherBot
 
 
 class TestOrganiser(unittest.TestCase):
@@ -8,13 +9,13 @@ class TestOrganiser(unittest.TestCase):
 
         self.assertEqual(set(), organiser.queues['test'])
         organiser.add('test', 'testplayer')
-        self.assertEqual(set(['testplayer']), organiser.queues['test'])
+        self.assertEqual({'testplayer'}, organiser.queues['test'])
 
     def test_remove(self):
         organiser = Organiser()
 
-        organiser.queues['test'] = set(['testplayer'])
-        self.assertEqual(set(['testplayer']), organiser.queues['test'])
+        organiser.queues['test'] = {'testplayer'}
+        self.assertEqual({'testplayer'}, organiser.queues['test'])
         organiser.remove('test', 'testplayer')
         self.assertEqual(set(), organiser.queues['test'])
 
@@ -26,17 +27,42 @@ class TestOrganiser(unittest.TestCase):
     def test_reset(self):
         organiser = Organiser()
 
-        organiser.queues['test'] = set(['testplayer'])
-        self.assertEqual(set(['testplayer']), organiser.queues['test'])
+        organiser.queues['test'] = {'testplayer'}
+        self.assertEqual({'testplayer'}, organiser.queues['test'])
         organiser.reset('test')
         self.assertEqual(set(), organiser.queues['test'])
 
     def test_ready(self):
         organiser = Organiser()
-        self.assertFalse(organiser.ready('test'))
+        bot = GatherBot()
+        bot.toggable_feats = {'AFK': False, 'Premade': False}
+        self.assertFalse(organiser.ready('test', bot))
         for i in range(Organiser.TEAM_SIZE * 2):
             organiser.queues['test'].add('testplayer{0}'.format(i))
-        self.assertTrue(organiser.ready('test'))
+        self.assertTrue(organiser.ready('test', bot))
+
+        organiser2 = Organiser()
+        bot.toggable_feats = {'AFK': False, 'Premade': True}
+        self.assertFalse(organiser2.ready('test', bot))
+        for i in range(Organiser.TEAM_SIZE):
+            organiser2.queues['test'].add('testplayer{0}'.format(i))
+        self.assertTrue(organiser2.ready('test', bot))
+
+    def test_is_not_ready(self):
+        organiser = Organiser()
+        bot = GatherBot()
+        bot.toggable_feats = {'AFK': False, 'Premade': False}
+        self.assertTrue(organiser.is_not_ready('test', bot))
+        for i in range(Organiser.TEAM_SIZE*2):
+            organiser.queues['test'].add('testplayer{0}'.format(i))
+        self.assertFalse(organiser.is_not_ready('test', bot))
+
+        organiser2 = Organiser()
+        bot.toggable_feats = {'AFK': False, 'Premade': True}
+        self.assertTrue(organiser2.is_not_ready('test', bot))
+        for i in range(Organiser.TEAM_SIZE):
+            organiser2.queues['test'].add('testplayer{0}'.format(i))
+        self.assertFalse(organiser2.is_not_ready('test', bot))
 
     def test_pop_teams(self):
         organiser = Organiser()
@@ -58,7 +84,7 @@ class TestOrganiser(unittest.TestCase):
         teams = organiser.pop_teams('test')
         self.assertEqual(Organiser.TEAM_SIZE, len(teams[0]))
         self.assertEqual(Organiser.TEAM_SIZE, len(teams[1]))
-        self.assertEqual(5, len(organiser.queues['test']))
+        self.assertEqual(6, len(organiser.queues['test']))
 
     def test_pop_teams_validates_queue_size(self):
         organiser = Organiser()

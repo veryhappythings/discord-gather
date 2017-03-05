@@ -1,3 +1,6 @@
 {
-  "token": "longtesttokenfromdiscordapi"
+  "token": "longtesttokenfromdiscordapi",
+  "botname": "your bot name for information purposes",
+  "language": "en",
+  "togged_on_features": "['AFK']"
 }

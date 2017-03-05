@@ -19,3 +19,6 @@ Session.vim
 tags
 
 config.json
+.idea/*
+.idea/
+!/test/config.json

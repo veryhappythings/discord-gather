@@ -1,8 +1,10 @@
+
+# coding: utf8
+import json
 import logging
 import discord
 from gather.bot import ListenerBot
 from gather.organiser import Organiser
-
 
 logger = logging.getLogger(__name__)
 
@@ -10,9 +12,39 @@ logger = logging.getLogger(__name__)
 class GatherBot(ListenerBot):
     def __init__(self):
         super().__init__()
-
         self.organiser = Organiser()
+        self.afk_organiser = Organiser()
         self.client = discord.Client()
+        self.toggable_feats = {'AFK': False, 'Premade': False}
+        self.language = "en"
+
+        with open('config.json', mode='r+', encoding='utf-8') as f:
+            config = json.load(f)
+            try:
+                self.language = config["language"]
+                logger.info('Language ' + self.language + ' is enabled.')
+            except KeyError:
+                config.update({"language": self.language})
+                f.seek(0)
+                f.write(json.dumps(config))
+                f.truncate()
+                logger.info('Language ' + self.language + ' is enabled.')
+
+        with open('config.json', mode='r+', encoding='utf-8') as f:
+            config = json.load(f)
+            for feat in self.toggable_feats.keys():
+                try:
+                    if feat in config['togged_on_features']:
+                        self.toggable_feats[feat] = True
+                        logger.info(feat + ' feature is enabled.')
+                    else:
+                        logger.info(feat + ' feature is disabled.')
+                except KeyError:
+                    config.update({"togged_on_features": "[]"})
+                    f.seek(0)
+                    f.write(json.dumps(config))
+                    f.truncate()
+                    logger.info(feat + ' feature is disabled.')
 
         @self.client.event
         async def on_ready():
@@ -39,12 +71,57 @@ class GatherBot(ListenerBot):
                         self.organiser.remove(channel, before)
                         await self.say(
                             channel,
-                            '{0} was signed in but went offline. {1}'.format(
+                            _('<@{0}> was signed in but went offline. {1}').format(
+                                before.id,
+                                self.player_count_display(channel)
+                            )
+                        )
+
+            # If the user passes in idle mode (AFK)
+
+            elif before.status == discord.Status.online and after.status == discord.Status.idle \
+                    and self.toggable_feats['AFK'] is True:
+                for channel in self.organiser.queues:
+
+                    if channel.server != before.server:
+                        continue
+
+                    # if the user is added then we remove him from the current PUG and keep him aside in afk_organiser
+                    if before in self.organiser.queues[channel]:
+                        self.organiser.remove(channel, before)
+                        self.afk_organiser.add(channel, before)
+                        await self.say(
+                            channel,
+                            _('{0} signed in but is now AFK and is temporarily no longer part of the queue. {1}')
+                            .format(before, self.player_count_display(channel)))
+
+            # If user was AFK and comes back online
+            elif before.status == discord.Status.idle and after.status == discord.Status.online \
+                    and self.toggable_feats['AFK'] is True:
+                for channel in self.organiser.queues:
+
+                    if channel.server != before.server:
+                        continue
+
+                    # If the user was AFK before, and that the current PUG is not ready, then add it again
+                    if (before in self.afk_organiser.queues[channel]) & self.organiser.is_not_ready(channel, self):
+                        self.afk_organiser.remove(channel, before)
+                        self.organiser.add(channel, before)
+                        await self.say(
+                            channel,
+                            _('{0} is back from AFK and re-enters the queue. {1}')
+                            .format(before, self.player_count_display(channel))
+                        )
+                    # Should not happen as queue is emptied right after it's full
+                    else:
+                        self.afk_organiser.remove(channel, before)
+                        await self.say(
+                            channel,
+                            _('{0} is back from AFK but queue is full! Error {1}').format(
                                 before,
                                 self.player_count_display(channel)
                             )
                         )
-                        await self.announce_players(channel)
 
     def run(self, token):
         self.token = token
@@ -60,14 +137,29 @@ class GatherBot(ListenerBot):
     async def announce_players(self, channel):
         await self.say(
             channel,
-            'Currently signed in players {0}: {1}'.format(
+            _('Currently signed in players {0}:\n- {1}').format(
                 self.player_count_display(channel),
-                ', '.join([str(p) for p in self.organiser.queues[channel]])
+                '\n- '.join([str(p) for p in self.organiser.queues[channel]])
+            )
+        )
+
+    async def announce_afk_players(self, channel):
+        await self.say(
+            channel,
+            _('Currently signed in and AFK players {0} :\n- {1}').format(
+                len(self.afk_organiser.queues[channel]),
+                '\n- '.join([str(p) for p in self.afk_organiser.queues[channel]])
             )
         )
 
     def player_count_display(self, channel):
-        return '({0}/{1})'.format(
-            len(self.organiser.queues[channel]),
-            self.organiser.TEAM_SIZE * 2,
-        )
+        if self.toggable_feats['Premade']:
+            return _('({0}/{1})').format(
+                len(self.organiser.queues[channel]),
+                self.organiser.TEAM_SIZE,
+            )
+        else:
+            return _('({0}/{1})').format(
+                len(self.organiser.queues[channel]),
+                self.organiser.TEAM_SIZE * 2,
+            )
