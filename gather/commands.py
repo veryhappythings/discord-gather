@@ -1,3 +1,4 @@
+# coding: utf8
 from gather.organiser import NotEnoughPlayersError, PlayerNotFoundError
 
 

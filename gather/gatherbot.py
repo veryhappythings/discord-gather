@@ -1,3 +1,4 @@
+# coding: utf8
 import logging
 import discord
 from gather.bot import ListenerBot
