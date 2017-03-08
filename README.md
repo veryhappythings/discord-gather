@@ -25,3 +25,4 @@ A huge thanks to:
 
 * [@zoidbergwill](https://github.com/zoidbergwill)
 * [@joshramsbottom](https://github.com/joshramsbottom)
+* [@Doezer](https://github.com/Doezer)
