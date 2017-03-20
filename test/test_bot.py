@@ -15,7 +15,7 @@ def async_test(f):
     return wrapper
 
 
-class TestGatherBot(unittest.TestCase):
+class TestListenerBot(unittest.TestCase):
     def test_register(self):
         bot = ListenerBot()
         self.assertEqual({}, bot.actions)
