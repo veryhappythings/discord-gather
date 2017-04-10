@@ -26,7 +26,7 @@ async def game_status(bot, channel, author, message):
 
 
 def format_team(players):
-    return ', '.join(str(p) for p in players)
+    return '\n'.join(str(p) for p in players)
 
 
 async def add(bot, channel, author, message):
@@ -48,7 +48,7 @@ async def add(bot, channel, author, message):
         team_two = format_team(team_two)
         await bot.say(
             channel,
-            'Game starting!\nTeam 1: {}\nTeam 2: {}'.format(team_one, team_two))
+            'Game starting!\nTeam 1:\n{}\n\nTeam 2:\n{}'.format(team_one, team_two))
     except NotEnoughPlayersError:
         pass
 
