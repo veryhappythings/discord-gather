@@ -1,6 +1,7 @@
 import unittest
+from unittest import mock
 from .helper import async_test, get_mock_coro
-from gather.gatherbot import GatherBot
+from gather.gatherbot import GatherBot, on_ready, on_message
 
 
 class TestGatherBot(unittest.TestCase):
@@ -81,3 +82,27 @@ class TestGatherBot(unittest.TestCase):
             'test channel',
             'Currently signed in players (1/10): mac'
         )
+
+    @async_test
+    async def test_on_ready(self):
+        mock_bot = mock.Mock()
+        mock_bot.client.user.name = 'testusername'
+        mock_bot.client.user.id = 'testuserid'
+
+        await on_ready(mock_bot)
+
+        self.assertEqual('testusername', mock_bot.username)
+
+    @async_test
+    async def test_on_message(self):
+        mock_bot = mock.Mock()
+        mock_bot.on_message = get_mock_coro(None)
+        mock_message = mock.Mock(
+            channel='testchannel',
+            author='testauthor',
+            content='testcontent'
+        )
+
+        await on_message(mock_bot, mock_message)
+
+        mock_bot.on_message.assert_has_calls([mock.call('testchannel', 'testauthor', 'testcontent')])
