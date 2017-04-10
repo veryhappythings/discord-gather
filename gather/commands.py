@@ -17,7 +17,7 @@ async def bot_help(bot, channel, author, message):
 
 async def game_status(bot, channel, author, message):
     """
-     - !game, !status - check current game status
+     - !game, !status - check current game status.
     """
     if bot.organiser.queues[channel]:
         await bot.announce_players(channel)
@@ -31,7 +31,7 @@ def format_team(players):
 
 async def add(bot, channel, author, message):
     """
-     - !add, !s - add yourself to the pool
+     - !add, !s - add yourself to the pool.
     """
     bot.organiser.add(channel, author)
     await bot.say(
@@ -55,7 +55,7 @@ async def add(bot, channel, author, message):
 
 async def remove(bot, channel, author, message):
     """
-     - !remove, !so - remove yourself from the pool
+     - !remove, !so - remove yourself from the pool.
     """
     try:
         bot.organiser.remove(channel, author)
@@ -75,7 +75,7 @@ async def remove(bot, channel, author, message):
 
 async def reset(bot, channel, author, message):
     """
-     - !reset - Empty the pool for this channel
+     - !reset - Empty the pool for this channel.
     """
     if channel.permissions_for(author).administrator:
         bot.organiser.reset(channel)
