@@ -10,36 +10,36 @@ from gather.organiser import Organiser
 logger = logging.getLogger(__name__)
 
 
-async def on_ready(self):
+async def on_ready(bot):
     logger.info('Logged in as')
-    logger.info(self.client.user.name)
-    logger.info(self.client.user.id)
+    logger.info(bot.client.user.name)
+    logger.info(bot.client.user.id)
     logger.info('------')
 
-    self.username = self.client.user.name
+    bot.username = bot.client.user.name
 
 
-async def on_message(self, message):
+async def on_message(bot, message):
     # FIXME: These are still objects, and perhaps they need to be?
-    await self.on_message(message.channel, message.author, message.content)
+    await bot.on_message(message.channel, message.author, message.content)
 
 
-async def on_member_update(self, before, after):
+async def on_member_update(bot, before, after):
     if before.status == discord.Status.online and after.status == discord.Status.offline:
-        for channel in self.organiser.queues:
+        for channel in bot.organiser.queues:
             if channel.server != before.server:
                 continue
 
-            if before in self.organiser.queues[channel]:
-                self.organiser.remove(channel, before)
-                await self.say(
+            if before in bot.organiser.queues[channel]:
+                bot.organiser.remove(channel, before)
+                await bot.say(
                     channel,
                     '{0} was signed in but went offline. {1}'.format(
                         before,
-                        self.player_count_display(channel)
+                        bot.player_count_display(channel)
                     )
                 )
-                await self.announce_players(channel)
+                await bot.announce_players(channel)
 
 
 class GatherBot(ListenerBot):
