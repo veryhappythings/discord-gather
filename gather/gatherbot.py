@@ -26,6 +26,7 @@ async def on_message(bot, message):
 
 async def on_member_update(bot, before, after):
     if before.status == discord.Status.online and after.status == discord.Status.offline:
+        # Handle players going offline
         for channel in bot.organiser.queues:
             if channel.server != before.server:
                 continue
@@ -40,6 +41,19 @@ async def on_member_update(bot, before, after):
                     )
                 )
                 await bot.announce_players(channel)
+    elif before.status == discord.Status.online and after.status == discord.Status.idle:
+        # Handle players going AFK
+        for channel in bot.organiser.queues:
+            if channel.server != before.server:
+                continue
+
+            if before in bot.organiser.queues[channel]:
+                bot.organiser.remove(channel, before)
+                await bot.say(
+                    channel,
+                    '{0} was signed in but went AFK. {1}'.format(
+                        before, bot.player_count_display(channel))
+                )
 
 
 class GatherBot(ListenerBot):
