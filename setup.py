@@ -4,7 +4,7 @@ from setuptools import setup
 
 
 requirements = [
-    'discord.py==0.11.0'
+    'discord.py==0.16.8'
 ]
 
 
