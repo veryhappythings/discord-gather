@@ -1,7 +1,8 @@
 import unittest
 from unittest import mock
+import discord
 from .helper import async_test, get_mock_coro
-from gather.gatherbot import GatherBot, on_ready, on_message
+from gather.gatherbot import GatherBot, on_ready, on_message, on_member_update
 
 
 class TestGatherBot(unittest.TestCase):
@@ -106,3 +107,29 @@ class TestGatherBot(unittest.TestCase):
         await on_message(mock_bot, mock_message)
 
         mock_bot.on_message.assert_has_calls([mock.call('testchannel', 'testauthor', 'testcontent')])
+
+    @async_test
+    async def test_on_member_update_going_offline(self):
+        mock_bot = mock.Mock()
+        mock_channel = mock.Mock()
+        mock_channel.server = 'testserver'
+        mock_bot.organiser = mock.Mock()
+        mock_bot.say = get_mock_coro(None)
+        mock_bot.announce_players = get_mock_coro(None)
+        mock_bot.player_count_display.return_value = '0/10'
+        before = mock.Mock()
+        before.status = discord.Status.online
+        before.server = 'testserver'
+        after = mock.Mock()
+        after.status = discord.Status.offline
+        mock_bot.organiser.queues = {mock_channel: set([before])}
+
+        await on_member_update(mock_bot, before, after)
+
+        mock_bot.announce_players.assert_has_calls([mock.call(mock_channel)])
+        mock_bot.say.assert_has_calls([mock.call(
+            mock_channel,
+            '{0} was signed in but went offline. {1}'.format(
+                before,
+                '0/10'
+            ))])

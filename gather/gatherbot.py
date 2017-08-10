@@ -25,13 +25,16 @@ async def on_message(bot, message):
 
 
 async def on_member_update(bot, before, after):
+    # Handle players going offline
     if before.status == discord.Status.online and after.status == discord.Status.offline:
-        # Handle players going offline
         for channel in bot.organiser.queues:
+            # Ignore channels that aren't on the old member's server
             if channel.server != before.server:
                 continue
 
+            # If the member was in the channel's queue, remove it and announce
             if before in bot.organiser.queues[channel]:
+                logger.info('{0} went offline'.format(before))
                 bot.organiser.remove(channel, before)
                 await bot.say(
                     channel,
@@ -41,13 +44,14 @@ async def on_member_update(bot, before, after):
                     )
                 )
                 await bot.announce_players(channel)
+    # Handle players going AFK
     elif before.status == discord.Status.online and after.status == discord.Status.idle:
-        # Handle players going AFK
         for channel in bot.organiser.queues:
             if channel.server != before.server:
                 continue
 
             if before in bot.organiser.queues[channel]:
+                logger.info('{0} went AFK'.format(before))
                 bot.organiser.remove(channel, before)
                 await bot.say(
                     channel,
