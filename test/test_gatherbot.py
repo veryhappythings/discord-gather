@@ -3,7 +3,7 @@ import unittest
 from unittest import mock
 import discord
 from .helper import async_test, get_mock_coro
-from gather.gatherbot import GatherBot, on_ready, on_message, on_member_update
+from gather.gatherbot import GatherBot
 
 
 class TestGatherBotCommands(unittest.TestCase):
@@ -37,9 +37,12 @@ class TestGatherBotCommands(unittest.TestCase):
         bot = GatherBot()
         bot.username = 'testuser'
         regex = r'^test'
-        action = mock.Mock()
+        action = get_mock_coro(True)
         bot.actions = {regex: (re.compile(regex, re.IGNORECASE), action)}
-        await bot.on_message(mock.Mock(), 'testuser', 'test')
+        mock_message = mock.Mock()
+        mock_message.author = 'testuser'
+        mock_message.content = 'test'
+        await bot.on_message(mock_message)
         action.assert_not_called()
 
     @async_test
@@ -49,7 +52,10 @@ class TestGatherBotCommands(unittest.TestCase):
         regex = r'^test'
         action = get_mock_coro(True)
         bot.actions = {regex: (re.compile(regex, re.IGNORECASE), action)}
-        await bot.on_message(mock.Mock(), 'anotheruser', 'test')
+        mock_message = mock.Mock()
+        mock_message.author = 'anotheruser'
+        mock_message.content = 'test'
+        await bot.on_message(mock_message)
         self.assertTrue(action.called)
 
 
@@ -131,53 +137,3 @@ class TestGatherBot(unittest.TestCase):
             'test channel',
             'Currently signed in players (1/10): mac'
         )
-
-    @async_test
-    async def test_on_ready(self):
-        mock_bot = mock.Mock()
-        mock_bot.client.user.name = 'testusername'
-        mock_bot.client.user.id = 'testuserid'
-
-        await on_ready(mock_bot)
-
-        self.assertEqual('testusername', mock_bot.username)
-
-    @async_test
-    async def test_on_message(self):
-        mock_bot = mock.Mock()
-        mock_bot.on_message = get_mock_coro(None)
-        mock_message = mock.Mock(
-            channel='testchannel',
-            author='testauthor',
-            content='testcontent'
-        )
-
-        await on_message(mock_bot, mock_message)
-
-        mock_bot.on_message.assert_has_calls([mock.call('testchannel', 'testauthor', 'testcontent')])
-
-    @async_test
-    async def test_on_member_update_going_offline(self):
-        mock_channel = mock.Mock()
-        mock_channel.server = 'testserver'
-        before = mock.Mock()
-        before.status = discord.Status.online
-        before.server = 'testserver'
-        after = mock.Mock()
-        after.status = discord.Status.offline
-        mock_bot = mock.Mock()
-        mock_bot.organiser = mock.Mock()
-        mock_bot.say = get_mock_coro(None)
-        mock_bot.announce_players = get_mock_coro(None)
-        mock_bot.player_count_display.return_value = '0/10'
-        mock_bot.organiser.queues = {mock_channel: set([before])}
-
-        await on_member_update(mock_bot, before, after)
-
-        mock_bot.announce_players.assert_has_calls([mock.call(mock_channel)])
-        mock_bot.say.assert_has_calls([mock.call(
-            mock_channel,
-            '{0} was signed in but went offline. {1}'.format(
-                before,
-                '0/10'
-            ))])

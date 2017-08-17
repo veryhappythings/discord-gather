@@ -1,7 +1,5 @@
 # coding: utf8
-import asyncio
 import logging
-import functools
 import re
 import discord
 from gather.organiser import Organiser
@@ -11,65 +9,15 @@ from gather import commands
 logger = logging.getLogger(__name__)
 
 
-async def on_ready(bot):
-    logger.info('Logged in as')
-    logger.info(bot.client.user.name)
-    logger.info(bot.client.user.id)
-    logger.info('------')
-
-    bot.username = bot.client.user.name
-
-
-async def on_message(bot, message):
-    # FIXME: These are still objects, and perhaps they need to be?
-    await bot.on_message(message.channel, message.author, message.content)
-
-
-async def on_member_update(bot, before, after):
-    # Handle players going offline
-    if before.status == discord.Status.online and after.status == discord.Status.offline:
-        for channel in bot.organiser.queues:
-            # Ignore channels that aren't on the old member's server
-            if channel.server != before.server:
-                continue
-
-            # If the member was in the channel's queue, remove it and announce
-            if before in bot.organiser.queues[channel]:
-                logger.info('{0} went offline'.format(before))
-                bot.organiser.remove(channel, before)
-                await bot.say(
-                    channel,
-                    '{0} was signed in but went offline. {1}'.format(
-                        before,
-                        bot.player_count_display(channel)
-                    )
-                )
-                await bot.announce_players(channel)
-    # Handle players going AFK
-    elif before.status == discord.Status.online and after.status == discord.Status.idle:
-        for channel in bot.organiser.queues:
-            if channel.server != before.server:
-                continue
-
-            if before in bot.organiser.queues[channel]:
-                logger.info('{0} went AFK'.format(before))
-                bot.organiser.remove(channel, before)
-                await bot.say(
-                    channel,
-                    '{0} was signed in but went AFK. {1}'.format(
-                        before, bot.player_count_display(channel))
-                )
-
-
 class GatherBot:
     def __init__(self):
         self.actions = {}
         self.organiser = Organiser()
         self.client = discord.Client()
 
-        self.client.on_ready = asyncio.coroutine(functools.partial(on_ready, self))
-        self.client.on_message = asyncio.coroutine(functools.partial(on_message, self))
-        self.client.on_member_update = asyncio.coroutine(functools.partial(on_member_update, self))
+        self.client.on_ready = self.on_ready
+        self.client.on_message = self.on_message
+        self.client.on_member_update = self.on_member_update
 
     def run(self, token):
         self.token = token
@@ -103,18 +51,61 @@ class GatherBot:
             logger.info('Overwriting regex {0}'.format(regex))
         self.actions[regex] = (re.compile(regex, re.IGNORECASE), coro)
 
-    async def on_message(self, channel, author, content):
-        if author != self.username:
-            logger.info('Message received [{0}]: "{1}"'.format(channel, content))
+    async def on_message(self, message):
+        if message.author != self.username:
+            logger.info('Message received [{0}]: "{1}"'.format(message.channel, message.content))
             for regex, fn in self.actions.values():
-                match = re.match(regex, content)
+                match = re.match(regex, message.content)
                 if match:
                     try:
-                        await fn(self, channel, author, content, *match.groups())
+                        await fn(self, message.channel, message.author, message.content, *match.groups())
                     except Exception as e:
                         logger.exception(e)
-                        await self.say(channel, 'Something went wrong with that command.')
+                        await self.say(message.channel, 'Something went wrong with that command.')
                     break
+
+    async def on_ready(self):
+        logger.info('Logged in as')
+        logger.info(self.client.user.name)
+        logger.info(self.client.user.id)
+        logger.info('------')
+
+        self.username = self.client.user.name
+
+    async def on_member_update(self, before, after):
+        # Handle players going offline
+        if before.status == discord.Status.online and after.status == discord.Status.offline:
+            for channel in self.organiser.queues:
+                # Ignore channels that aren't on the old member's server
+                if channel.server != before.server:
+                    continue
+
+                # If the member was in the channel's queue, remove it and announce
+                if before in self.organiser.queues[channel]:
+                    logger.info('{0} went offline'.format(before))
+                    self.organiser.remove(channel, before)
+                    await self.say(
+                        channel,
+                        '{0} was signed in but went offline. {1}'.format(
+                            before,
+                            self.player_count_display(channel)
+                        )
+                    )
+                    await self.announce_players(channel)
+        # Handle players going AFK
+        elif before.status == discord.Status.online and after.status == discord.Status.idle:
+            for channel in self.organiser.queues:
+                if channel.server != before.server:
+                    continue
+
+                if before in self.organiser.queues[channel]:
+                    logger.info('{0} went AFK'.format(before))
+                    self.organiser.remove(channel, before)
+                    await self.say(
+                        channel,
+                        '{0} was signed in but went AFK. {1}'.format(
+                            before, self.player_count_display(channel))
+                    )
 
 
 class DiscordGather:
