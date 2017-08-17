@@ -2,8 +2,8 @@
 import asyncio
 import logging
 import functools
+import re
 import discord
-from gather.bot import ListenerBot
 from gather.organiser import Organiser
 
 
@@ -60,10 +60,9 @@ async def on_member_update(bot, before, after):
                 )
 
 
-class GatherBot(ListenerBot):
+class GatherBot:
     def __init__(self):
-        super().__init__()
-
+        self.actions = {}
         self.organiser = Organiser()
         self.client = discord.Client()
 
@@ -96,3 +95,22 @@ class GatherBot(ListenerBot):
             len(self.organiser.queues[channel]),
             self.organiser.TEAM_SIZE * 2,
         )
+
+    def register_action(self, regex, coro):
+        logger.info('Registering action {0}'.format(regex))
+        if regex in self.actions:
+            logger.info('Overwriting regex {0}'.format(regex))
+        self.actions[regex] = (re.compile(regex, re.IGNORECASE), coro)
+
+    async def on_message(self, channel, author, content):
+        if author != self.username:
+            logger.info('Message received [{0}]: "{1}"'.format(channel, content))
+            for regex, fn in self.actions.values():
+                match = re.match(regex, content)
+                if match:
+                    try:
+                        await fn(self, channel, author, content, *match.groups())
+                    except Exception as e:
+                        logger.exception(e)
+                        await self.say(channel, 'Something went wrong with that command.')
+                    break
