@@ -5,6 +5,7 @@ import functools
 import re
 import discord
 from gather.organiser import Organiser
+from gather import commands
 
 
 logger = logging.getLogger(__name__)
@@ -114,3 +115,18 @@ class GatherBot:
                         logger.exception(e)
                         await self.say(channel, 'Something went wrong with that command.')
                     break
+
+
+class DiscordGather:
+    def __init__(self, token):
+        self.token = token
+
+        self.bot = GatherBot()
+        self.bot.register_action('^!help$', commands.bot_help)
+        self.bot.register_action('^!(?:add|join|s)$', commands.add)
+        self.bot.register_action('^!(?:remove|rem|so)$', commands.remove)
+        self.bot.register_action('^!(?:game|status)$', commands.game_status)
+        self.bot.register_action('^!(?:reset)$', commands.reset)
+
+    def run(self):
+        self.bot.run(self.token)
