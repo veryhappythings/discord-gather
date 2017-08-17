@@ -1,7 +1,6 @@
 import re
 import unittest
 from unittest import mock
-import discord
 from .helper import async_test, get_mock_coro
 from gather.gatherbot import GatherBot
 
