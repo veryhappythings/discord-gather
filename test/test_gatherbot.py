@@ -56,6 +56,19 @@ class TestGatherBotCommands(unittest.TestCase):
         self.assertTrue(action.called)
 
 
+class TestGatherBotMessageHandling(unittest.TestCase):
+    @async_test
+    async def test_register_and_send(self):
+        bot = GatherBot('testuser')
+        handler = get_mock_coro(True)
+
+        bot.register_message_handler(handler)
+        await bot.say('Test channel', 'Test message')
+
+        self.assertEqual(1, len(bot.message_handlers))
+        self.assertTrue(handler.called)
+
+
 class TestGatherBot(unittest.TestCase):
     def test_player_count_display_with_zero(self):
         bot = GatherBot('testuser')
