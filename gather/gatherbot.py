@@ -85,40 +85,46 @@ class GatherBot:
                         await self.say(message.channel, 'Something went wrong with that command.')
                     break
 
+    async def _member_went_offline(self, before, after):
+        for channel in self.organiser.queues:
+            # Ignore channels that aren't on the old member's server
+            if channel.server != before.server:
+                continue
+
+            # If the member was in the channel's queue, remove it and announce
+            if before in self.organiser.queues[channel]:
+                logger.info('{0} went offline'.format(before))
+                self.organiser.remove(channel, before)
+                await self.say(
+                    channel,
+                    '{0} was signed in but went offline. {1}'.format(
+                        before,
+                        self.player_count_display(channel)
+                    )
+                )
+                await self.announce_players(channel)
+
+    async def _member_went_afk(self, before, after):
+        for channel in self.organiser.queues:
+            if channel.server != before.server:
+                continue
+
+            if before in self.organiser.queues[channel]:
+                logger.info('{0} went AFK'.format(before))
+                self.organiser.remove(channel, before)
+                await self.say(
+                    channel,
+                    '{0} was signed in but went AFK. {1}'.format(
+                        before, self.player_count_display(channel))
+                )
+
     async def on_member_update(self, before, after):
         # Handle players going offline
         if before.status == discord.Status.online and after.status == discord.Status.offline:
-            for channel in self.organiser.queues:
-                # Ignore channels that aren't on the old member's server
-                if channel.server != before.server:
-                    continue
-
-                # If the member was in the channel's queue, remove it and announce
-                if before in self.organiser.queues[channel]:
-                    logger.info('{0} went offline'.format(before))
-                    self.organiser.remove(channel, before)
-                    await self.say(
-                        channel,
-                        '{0} was signed in but went offline. {1}'.format(
-                            before,
-                            self.player_count_display(channel)
-                        )
-                    )
-                    await self.announce_players(channel)
+            self._member_went_offline(before, after)
         # Handle players going AFK
         elif before.status == discord.Status.online and after.status == discord.Status.idle:
-            for channel in self.organiser.queues:
-                if channel.server != before.server:
-                    continue
-
-                if before in self.organiser.queues[channel]:
-                    logger.info('{0} went AFK'.format(before))
-                    self.organiser.remove(channel, before)
-                    await self.say(
-                        channel,
-                        '{0} was signed in but went AFK. {1}'.format(
-                            before, self.player_count_display(channel))
-                    )
+            self._member_went_afk(before, after)
 
 
 class DiscordGather:
