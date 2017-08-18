@@ -9,22 +9,43 @@ from gather import commands
 logger = logging.getLogger(__name__)
 
 
-class GatherBot:
-    def __init__(self):
-        self.actions = {}
-        self.organiser = Organiser()
+class DiscordAdaptor:
+    def __init__(self, token):
+        self.token = token
         self.client = discord.Client()
 
-        self.client.on_ready = self.on_ready
-        self.client.on_message = self.on_message
-        self.client.on_member_update = self.on_member_update
-
-    def run(self, token):
-        self.token = token
+    def run(self):
         self.client.run(self.token)
 
-    async def say(self, channel, message):
+    def register_on_ready(self, target):
+        self.client.on_ready = target
+
+    def register_on_message(self, target):
+        self.client.on_message = target
+
+    def register_on_member_update(self, target):
+        self.client.on_member_update = target
+
+    def username(self):
+        return self.client.user.name
+
+    async def send_message(self, channel, message):
         await self.client.send_message(channel, message)
+
+
+class GatherBot:
+    def __init__(self, username):
+        self.username = username
+        self.actions = {}
+        self.organiser = Organiser()
+        self.message_handlers = []
+
+    def register_message_handler(self, handler):
+        self.message_handlers.append(handler)
+
+    async def say(self, channel, message):
+        for handler in self.message_handlers:
+            await handler(channel, message)
 
     async def say_lines(self, channel, messages):
         for line in messages:
@@ -63,14 +84,6 @@ class GatherBot:
                         logger.exception(e)
                         await self.say(message.channel, 'Something went wrong with that command.')
                     break
-
-    async def on_ready(self):
-        logger.info('Logged in as')
-        logger.info(self.client.user.name)
-        logger.info(self.client.user.id)
-        logger.info('------')
-
-        self.username = self.client.user.name
 
     async def on_member_update(self, before, after):
         # Handle players going offline
@@ -111,13 +124,25 @@ class GatherBot:
 class DiscordGather:
     def __init__(self, token):
         self.token = token
+        self.bot = None
+        self.discord = DiscordAdaptor(token)
+        self.discord.register_on_ready(self.on_ready)
 
-        self.bot = GatherBot()
+    def run(self):
+        self.discord.run()
+
+    async def on_ready(self):
+        self.bot = GatherBot(self.discord.username)
+        self.bot.register_message_handler(self.discord.send_message)
         self.bot.register_action('^!help$', commands.bot_help)
         self.bot.register_action('^!(?:add|join|s)$', commands.add)
         self.bot.register_action('^!(?:remove|rem|so)$', commands.remove)
         self.bot.register_action('^!(?:game|status)$', commands.game_status)
         self.bot.register_action('^!(?:reset)$', commands.reset)
 
-    def run(self):
-        self.bot.run(self.token)
+        self.discord.register_on_member_update(self.bot.on_member_update)
+        self.discord.register_on_message(self.bot.on_message)
+
+        logger.info('Logged in as')
+        logger.info(self.bot.username())
+        logger.info('------')
