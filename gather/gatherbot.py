@@ -85,7 +85,7 @@ class GatherBot:
                         await self.say(message.channel, 'Something went wrong with that command.')
                     break
 
-    async def _member_went_offline(self, before):
+    async def member_went_offline(self, before):
         for channel in self.organiser.queues:
             # If the member was in the channel's queue, remove it and announce
             if before in self.organiser.queues[channel]:
@@ -100,7 +100,7 @@ class GatherBot:
                 )
                 await self.announce_players(channel)
 
-    async def _member_went_afk(self, before):
+    async def member_went_afk(self, before):
         for channel in self.organiser.queues:
             # If the member was in the channel's queue, remove it and announce
             if before in self.organiser.queues[channel]:
@@ -111,14 +111,6 @@ class GatherBot:
                     '{0} was signed in but went AFK. {1}'.format(
                         before, self.player_count_display(channel))
                 )
-
-    async def on_member_update(self, before, after):
-        # Handle players going offline
-        if before.status == discord.Status.online and after.status == discord.Status.offline:
-            self._member_went_offline(before)
-        # Handle players going AFK
-        elif before.status == discord.Status.online and after.status == discord.Status.idle:
-            self._member_went_afk(before)
 
 
 class DiscordGather:
@@ -140,9 +132,17 @@ class DiscordGather:
         self.bot.register_action('^!(?:game|status)$', commands.game_status)
         self.bot.register_action('^!(?:reset)$', commands.reset)
 
-        self.discord.register_on_member_update(self.bot.on_member_update)
+        self.discord.register_on_member_update(self.on_member_update)
         self.discord.register_on_message(self.bot.on_message)
 
         logger.info('Logged in as')
         logger.info(self.bot.username())
         logger.info('------')
+
+    async def on_member_update(self, before, after):
+        # Handle players going offline
+        if before.status == discord.Status.online and after.status == discord.Status.offline:
+            await self.bot.member_went_offline(before)
+        # Handle players going AFK
+        elif before.status == discord.Status.online and after.status == discord.Status.idle:
+            await self.bot.member_went_afk(before)
