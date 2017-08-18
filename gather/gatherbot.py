@@ -87,10 +87,6 @@ class GatherBot:
 
     async def _member_went_offline(self, before):
         for channel in self.organiser.queues:
-            # Ignore channels that aren't on the old member's server
-            if channel.server != before.server:
-                continue
-
             # If the member was in the channel's queue, remove it and announce
             if before in self.organiser.queues[channel]:
                 logger.info('{0} went offline'.format(before))
@@ -106,9 +102,7 @@ class GatherBot:
 
     async def _member_went_afk(self, before):
         for channel in self.organiser.queues:
-            if channel.server != before.server:
-                continue
-
+            # If the member was in the channel's queue, remove it and announce
             if before in self.organiser.queues[channel]:
                 logger.info('{0} went AFK'.format(before))
                 self.organiser.remove(channel, before)
