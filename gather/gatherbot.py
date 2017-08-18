@@ -85,7 +85,7 @@ class GatherBot:
                         await self.say(message.channel, 'Something went wrong with that command.')
                     break
 
-    async def _member_went_offline(self, before, after):
+    async def _member_went_offline(self, before):
         for channel in self.organiser.queues:
             # Ignore channels that aren't on the old member's server
             if channel.server != before.server:
@@ -104,7 +104,7 @@ class GatherBot:
                 )
                 await self.announce_players(channel)
 
-    async def _member_went_afk(self, before, after):
+    async def _member_went_afk(self, before):
         for channel in self.organiser.queues:
             if channel.server != before.server:
                 continue
@@ -121,10 +121,10 @@ class GatherBot:
     async def on_member_update(self, before, after):
         # Handle players going offline
         if before.status == discord.Status.online and after.status == discord.Status.offline:
-            self._member_went_offline(before, after)
+            self._member_went_offline(before)
         # Handle players going AFK
         elif before.status == discord.Status.online and after.status == discord.Status.idle:
-            self._member_went_afk(before, after)
+            self._member_went_afk(before)
 
 
 class DiscordGather:
