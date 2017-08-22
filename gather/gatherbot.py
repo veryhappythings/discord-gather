@@ -63,19 +63,16 @@ class GatherBot:
                     break
 
     async def member_went_offline(self, before):
-        for channel in self.organiser.queues:
-            # If the member was in the channel's queue, remove it and announce
-            if before in self.organiser.queues[channel]:
-                logger.info('{0} went offline'.format(before))
-                self.organiser.remove(channel, before)
-                await self.say(
-                    channel,
-                    '{0} was signed in but went offline. {1}'.format(
-                        before,
-                        self.player_count_display(channel)
-                    )
+        affected_channels = self.organiser.remove_from_all(before)
+        for channel in affected_channels:
+            await self.say(
+                channel,
+                '{0} was signed in but went offline. {1}'.format(
+                    before,
+                    self.player_count_display(channel)
                 )
-                await self.announce_players(channel)
+            )
+            await self.announce_players(channel)
 
     async def member_went_afk(self, before):
         for channel in self.organiser.queues:

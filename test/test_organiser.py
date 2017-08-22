@@ -21,6 +21,22 @@ class TestOrganiser(unittest.TestCase):
         organiser = Organiser()
         self.assertRaises(PlayerNotFoundError, organiser.remove, 'test', 'testplayer')
 
+    def test_remove_from_all(self):
+        organiser = Organiser()
+        organiser.queues = {
+            'test1': set(['testplayer']),
+            'test2': set(['testplayer', 'anotherplayer']),
+            'test3': set(['anotherplayer'])}
+
+        affected_queues = organiser.remove_from_all('testplayer')
+
+        expected = {
+            'test1': set([]),
+            'test2': set(['anotherplayer']),
+            'test3': set(['anotherplayer'])}
+        self.assertEqual(expected, organiser.queues)
+        self.assertEqual(set(['test1', 'test2']), affected_queues)
+
     def test_reset(self):
         organiser = Organiser()
 

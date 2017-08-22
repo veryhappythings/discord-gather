@@ -26,6 +26,14 @@ class Organiser:
         except KeyError:
             raise PlayerNotFoundError()
 
+    def remove_from_all(self, player):
+        affected_queues = set()
+        for queue in self.queues:
+            if player in self.queues[queue]:
+                self.queues[queue].remove(player)
+                affected_queues.add(queue)
+        return affected_queues
+
     def reset(self, queue):
         self.queues[queue] = set()
 
