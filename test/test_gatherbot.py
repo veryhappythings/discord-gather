@@ -1,7 +1,7 @@
 import re
 import unittest
 from unittest import mock
-from .helper import async_test, get_mock_coro
+from .helper import async_test, get_mock_coro, get_mock_coro_throwing_exception
 from gather.gatherbot import GatherBot
 
 
@@ -54,6 +54,20 @@ class TestGatherBotCommands(unittest.TestCase):
         mock_message.content = 'test'
         await bot.on_message(mock_message)
         self.assertTrue(action.called)
+
+    @async_test
+    async def test_on_message_error(self):
+        bot = GatherBot('testuser')
+        regex = r'^test'
+        action = get_mock_coro_throwing_exception(AssertionError, 'error')
+        bot.actions = {regex: (re.compile(regex, re.IGNORECASE), action)}
+        bot.say = get_mock_coro(True)
+        mock_message = mock.Mock()
+        mock_message.author = 'anotheruser'
+        mock_message.content = 'test'
+        await bot.on_message(mock_message)
+        self.assertTrue(action.called)
+        self.assertTrue(bot.say.called)
 
 
 class TestGatherBotMessageHandling(unittest.TestCase):

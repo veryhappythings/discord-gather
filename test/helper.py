@@ -19,3 +19,12 @@ def get_mock_coro(return_value):
         return return_value
 
     return unittest.mock.Mock(wraps=mock_coro)
+
+
+def get_mock_coro_throwing_exception(exception_class, message):
+    # http://stackoverflow.com/questions/29881236/how-to-mock-asyncio-coroutines/29905620#29905620
+    @asyncio.coroutine
+    def mock_coro(*args, **kwargs):
+        raise exception_class(message)
+
+    return unittest.mock.Mock(wraps=mock_coro)
