@@ -162,3 +162,32 @@ class TestGatherBot(unittest.TestCase):
         self.assertTrue(bot.organiser.remove_from_all.called)
         self.assertTrue(bot.say.called)
         self.assertTrue(bot.announce_players.called)
+
+    @async_test
+    async def test_member_went_afk_in_no_channels(self):
+        bot = GatherBot('testuser')
+        bot.say = get_mock_coro(True)
+        bot.announce_players = get_mock_coro(True)
+        bot.organiser = unittest.mock.Mock()
+        bot.organiser.remove_from_all.return_value = set()
+        player = unittest.mock.Mock()
+
+        await bot.member_went_afk(player)
+
+        self.assertTrue(bot.organiser.remove_from_all.called)
+
+    @async_test
+    async def test_member_went_afk_in_channels(self):
+        bot = GatherBot('testuser')
+        bot.say = get_mock_coro(True)
+        bot.announce_players = get_mock_coro(True)
+        bot.player_count_display = get_mock_coro(True)
+        bot.organiser = unittest.mock.Mock()
+        bot.organiser.remove_from_all.return_value = set(['testchannel'])
+        player = unittest.mock.Mock()
+
+        await bot.member_went_afk(player)
+
+        self.assertTrue(bot.organiser.remove_from_all.called)
+        self.assertTrue(bot.say.called)
+        self.assertTrue(bot.announce_players.called)

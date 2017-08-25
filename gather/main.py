@@ -3,7 +3,7 @@
 import os
 import logging
 import json
-from gather.gatherbot import DiscordGather
+from gather.discord_gather import DiscordGather
 
 
 def main():
