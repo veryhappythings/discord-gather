@@ -8,8 +8,8 @@ class TestDiscordGather(unittest.TestCase):
     @async_test
     async def test_on_ready(self):
         gather = DiscordGather('token')
-        gather.discord = unittest.mock.Mock()
-        gather.discord.username = 'testuser'
+        gather.client = unittest.mock.Mock()
+        gather.client.user.name = 'testuser'
         await gather.on_ready()
         self.assertEqual(gather.bot.username, 'testuser')
 
