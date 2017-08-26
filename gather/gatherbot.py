@@ -48,15 +48,24 @@ class GatherBot:
 
     async def on_message(self, message):
         if message.author != self.username:
-            logger.info('Message received [{0}]: "{1}"'.format(message.channel, message.content))
+            logger.info('Message received [{0}]: "{1}"'.format(
+                message.channel,
+                message.content))
             for regex, fn in self.actions.values():
                 match = re.match(regex, message.content)
                 if match:
                     try:
-                        await fn(self, message.channel, message.author, message.content, *match.groups())
+                        await fn(
+                            self,
+                            message.channel,
+                            message.author,
+                            message.content,
+                            *match.groups())
                     except Exception as e:
                         logger.exception(e)
-                        await self.say(message.channel, 'Something went wrong with that command.')
+                        await self.say(
+                            message.channel,
+                            'Something went wrong with that command.')
                     break
 
     async def member_went_offline(self, before):
@@ -66,9 +75,7 @@ class GatherBot:
                 channel,
                 '{0} was signed in but went offline. {1}'.format(
                     before,
-                    self.player_count_display(channel)
-                )
-            )
+                    self.player_count_display(channel)))
             await self.announce_players(channel)
 
     async def member_went_afk(self, before):
@@ -77,6 +84,5 @@ class GatherBot:
             await self.say(
                 channel,
                 '{0} was signed in but went AFK. {1}'.format(
-                    before, self.player_count_display(channel))
-            )
+                    before, self.player_count_display(channel)))
             await self.announce_players(channel)

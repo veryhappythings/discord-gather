@@ -22,7 +22,10 @@ async def game_status(bot, channel, author, message):
     if bot.organiser.queues[channel]:
         await bot.announce_players(channel)
     else:
-        await bot.say(channel, 'No players currently signed in. You can start a game by typing "!add".')
+        await bot.say(
+            channel,
+            'No players currently signed in. You can start a game by typing '
+            '"!add".')
 
 
 def format_team(players):
@@ -48,7 +51,9 @@ async def add(bot, channel, author, message):
         team_two = format_team(team_two)
         await bot.say(
             channel,
-            'Game starting!\nTeam 1:\n{}\n\nTeam 2:\n{}'.format(team_one, team_two))
+            'Game starting!\nTeam 1:\n{}\n\nTeam 2:\n{}'.format(
+                team_one,
+                team_two))
     except NotEnoughPlayersError:
         pass
 

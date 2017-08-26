@@ -35,8 +35,10 @@ class DiscordGather:
 
     async def on_member_update(self, before, after):
         # Handle players going offline
-        if before.status == discord.Status.online and after.status == discord.Status.offline:
+        if (before.status == discord.Status.online and
+                after.status == discord.Status.offline):
             await self.bot.member_went_offline(before)
         # Handle players going AFK
-        elif before.status == discord.Status.online and after.status == discord.Status.idle:
+        elif (before.status == discord.Status.online and
+                after.status == discord.Status.idle):
             await self.bot.member_went_afk(before)
