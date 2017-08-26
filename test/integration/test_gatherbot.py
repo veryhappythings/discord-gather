@@ -6,13 +6,11 @@ from gather.gatherbot import GatherBot
 from ..helper import async_test, get_mock_coro
 
 
+Member = namedtuple('Member', ['name'])
+Member.__str__ = lambda self: self.name
 Message = namedtuple('Message', ['author', 'channel', 'content'])
 Server = namedtuple('Server', ['name'])
 Channel = namedtuple('Channel', ['server', 'name'])
-
-
-def create_message(player_name, channel, content):
-    return Message(player_name, channel, content)
 
 
 class TestGatherBotIntegration(unittest.TestCase):
@@ -32,7 +30,7 @@ class TestGatherBotIntegration(unittest.TestCase):
         channel = Channel(server, 'testchannel')
         for i in range(10):
             await self.bot.on_message(
-                create_message('player{}'.format(i), channel, '!s'))
+                Message(Member('player{}'.format(i)), channel, '!s'))
 
         self.send_message.assert_has_calls([
             call(
