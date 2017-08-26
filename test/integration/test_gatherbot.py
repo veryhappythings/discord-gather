@@ -7,11 +7,12 @@ from ..helper import async_test, get_mock_coro
 
 
 Message = namedtuple('Message', ['author', 'channel', 'content'])
-Channel = namedtuple('Channel', ['name'])
+Server = namedtuple('Server', ['name'])
+Channel = namedtuple('Channel', ['server', 'name'])
 
 
-def create_message(player_name, channel_name, content):
-    return Message(player_name, Channel(channel_name), content)
+def create_message(player_name, channel, content):
+    return Message(player_name, channel, content)
 
 
 class TestGatherBotIntegration(unittest.TestCase):
@@ -27,40 +28,42 @@ class TestGatherBotIntegration(unittest.TestCase):
 
     @async_test
     async def test_10_players_find_a_game(self):
+        server = Server('testserver')
+        channel = Channel(server, 'testchannel')
         for i in range(10):
             await self.bot.on_message(
-                create_message('player{}'.format(i), 'testchannel', '!s'))
+                create_message('player{}'.format(i), channel, '!s'))
 
         self.send_message.assert_has_calls([
             call(
-                Channel(name='testchannel'),
+                Channel(server, 'testchannel'),
                 'You are now signed in, player0. (1/10)'),
             call(
-                Channel(name='testchannel'),
+                Channel(server, 'testchannel'),
                 'You are now signed in, player1. (2/10)'),
             call(
-                Channel(name='testchannel'),
+                Channel(server, 'testchannel'),
                 'You are now signed in, player2. (3/10)'),
             call(
-                Channel(name='testchannel'),
+                Channel(server, 'testchannel'),
                 'You are now signed in, player3. (4/10)'),
             call(
-                Channel(name='testchannel'),
+                Channel(server, 'testchannel'),
                 'You are now signed in, player4. (5/10)'),
             call(
-                Channel(name='testchannel'),
+                Channel(server, 'testchannel'),
                 'You are now signed in, player5. (6/10)'),
             call(
-                Channel(name='testchannel'),
+                Channel(server, 'testchannel'),
                 'You are now signed in, player6. (7/10)'),
             call(
-                Channel(name='testchannel'),
+                Channel(server, 'testchannel'),
                 'You are now signed in, player7. (8/10)'),
             call(
-                Channel(name='testchannel'),
+                Channel(server, 'testchannel'),
                 'You are now signed in, player8. (9/10)'),
             call(
-                Channel(name='testchannel'),
+                Channel(server, 'testchannel'),
                 'You are now signed in, player9. (10/10)')])
         # FIXME: Check that this message better matches a template.
         # The player order is random, so you can't just compare the message
