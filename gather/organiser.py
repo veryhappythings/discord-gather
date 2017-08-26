@@ -1,6 +1,10 @@
 # coding: utf8
+import logging
 import random
 from collections import defaultdict
+
+
+logger = logging.getLogger(__name__)
 
 
 class NotEnoughPlayersError(Exception):
@@ -16,6 +20,7 @@ class Organiser:
 
     def __init__(self):
         self.queues = defaultdict(lambda: set())
+        self.games_count = defaultdict(int)
 
     def add(self, queue, player):
         self.queues[queue].add(player)
@@ -44,6 +49,7 @@ class Organiser:
         if len(self.queues[queue]) < Organiser.TEAM_SIZE * 2:
             raise NotEnoughPlayersError('Not enough players!')
 
+        self.games_count[queue] += 1
         candidates = list(self.queues[queue])
         random.shuffle(candidates)
         players = candidates[:Organiser.TEAM_SIZE * 2]

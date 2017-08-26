@@ -69,6 +69,7 @@ class TestOrganiser(unittest.TestCase):
         for player in teams[1]:
             self.assertTrue(player not in teams[0])
         self.assertEqual(0, len(organiser.queues['test']))
+        self.assertEqual({'test': 1}, organiser.games_count)
 
     def test_pop_teams_leaves_extras(self):
         organiser = Organiser()
