@@ -1,5 +1,5 @@
 import asyncio
-import unittest
+from unittest import mock
 
 
 def async_test(f):
@@ -18,7 +18,7 @@ def get_mock_coro(return_value):
     def mock_coro(*args, **kwargs):
         return return_value
 
-    return unittest.mock.Mock(wraps=mock_coro)
+    return mock.Mock(wraps=mock_coro)
 
 
 def get_mock_coro_throwing_exception(exception_class, message):
@@ -27,4 +27,4 @@ def get_mock_coro_throwing_exception(exception_class, message):
     def mock_coro(*args, **kwargs):
         raise exception_class(message)
 
-    return unittest.mock.Mock(wraps=mock_coro)
+    return mock.Mock(wraps=mock_coro)
