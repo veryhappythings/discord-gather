@@ -33,38 +33,44 @@ class TestGatherBotIntegration(unittest.TestCase):
                 Message(Member('player{}'.format(i)), channel, '!s'))
 
         self.send_message.assert_has_calls([
-            call(
-                Channel(server, 'testchannel'),
-                'You are now signed in, player0. (1/10)'),
-            call(
-                Channel(server, 'testchannel'),
-                'You are now signed in, player1. (2/10)'),
-            call(
-                Channel(server, 'testchannel'),
-                'You are now signed in, player2. (3/10)'),
-            call(
-                Channel(server, 'testchannel'),
-                'You are now signed in, player3. (4/10)'),
-            call(
-                Channel(server, 'testchannel'),
-                'You are now signed in, player4. (5/10)'),
-            call(
-                Channel(server, 'testchannel'),
-                'You are now signed in, player5. (6/10)'),
-            call(
-                Channel(server, 'testchannel'),
-                'You are now signed in, player6. (7/10)'),
-            call(
-                Channel(server, 'testchannel'),
-                'You are now signed in, player7. (8/10)'),
-            call(
-                Channel(server, 'testchannel'),
-                'You are now signed in, player8. (9/10)'),
-            call(
-                Channel(server, 'testchannel'),
-                'You are now signed in, player9. (10/10)')])
+            call(channel, 'You are now signed in, player0. (1/10)'),
+            call(channel, 'You are now signed in, player1. (2/10)'),
+            call(channel, 'You are now signed in, player2. (3/10)'),
+            call(channel, 'You are now signed in, player3. (4/10)'),
+            call(channel, 'You are now signed in, player4. (5/10)'),
+            call(channel, 'You are now signed in, player5. (6/10)'),
+            call(channel, 'You are now signed in, player6. (7/10)'),
+            call(channel, 'You are now signed in, player7. (8/10)'),
+            call(channel, 'You are now signed in, player8. (9/10)'),
+            call(channel, 'You are now signed in, player9. (10/10)')])
         # FIXME: Check that this message better matches a template.
         # The player order is random, so you can't just compare the message
         self.assertTrue(
             self.send_message.mock_calls[-1][1][1].startswith('Game starting!')
         )
+
+    @async_test
+    async def test_multiple_servers(self):
+        server1 = Server('testserver1')
+        server2 = Server('testserver2')
+        channel1 = Channel(server1, 'testchannel')
+        channel2 = Channel(server2, 'testchannel')
+        for i in range(5):
+            await self.bot.on_message(
+                Message(Member('player{}'.format(i)), channel1, '!s'))
+        for i in range(5, 10):
+            await self.bot.on_message(
+                Message(Member('player{}'.format(i)), channel2, '!s'))
+
+        self.send_message.assert_has_calls([
+            call(channel1, 'You are now signed in, player0. (1/10)'),
+            call(channel1, 'You are now signed in, player1. (2/10)'),
+            call(channel1, 'You are now signed in, player2. (3/10)'),
+            call(channel1, 'You are now signed in, player3. (4/10)'),
+            call(channel1, 'You are now signed in, player4. (5/10)'),
+            call(channel2, 'You are now signed in, player5. (1/10)'),
+            call(channel2, 'You are now signed in, player6. (2/10)'),
+            call(channel2, 'You are now signed in, player7. (3/10)'),
+            call(channel2, 'You are now signed in, player8. (4/10)'),
+            call(channel2, 'You are now signed in, player9. (5/10)')])
+        self.assertEqual(10, len(self.send_message.mock_calls), self.send_message.mock_calls)
