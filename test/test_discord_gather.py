@@ -42,11 +42,7 @@ class TestDiscordGather(unittest.TestCase):
         organiser = unittest.mock.Mock()
         MockChannel = namedtuple('Channel', ['server'])
         key = MockChannel('testserver')
-        organiser.queues = {
-            key: ['player1']
-        }
-        organiser.games_count = {
-            key: 1
-        }
+        organiser.queues = {key: ['player1']}
+        organiser.games_count = {key: 1}
 
         self.assertEqual("Report:\ntestserver-Channel(server='testserver'): 1 current players - 1 games to date", report(organiser))
