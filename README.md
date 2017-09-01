@@ -3,9 +3,16 @@
 
 ## A basic discord bot for Dota 2 pickup games
 
-This is a very lightweight bot for organising pickup games on Discord. It has no tracking and no matchmaking. It simply maintains a queue of players who wish to play and prints out two randomised teams when enough people are signed in.
+This is a very lightweight bot for organising pickup games on Discord. It has no tracking and no matchmaking. It simply maintains a queue of players who wish to play and prints out two randomised 5 person teams when 10 people are signed in.
 
-## To use
+## If you just want to add this bot to your Discord
+
+You can add the public version of this bot to your server using this link:
+
+* https://discordapp.com/oauth2/authorize?client_id=353106318812381185&scope=bot&permissions=3072
+
+
+## To run your own, on your own server or for development
 
 * Get your bot a discord token by adding a new app at https://discordapp.com/developers/applications/me and creating your app a bot user
 * Add your bot to your guild by constructing a link from this https://discordapp.com/developers/docs/topics/oauth2#adding-bots-to-guilds - The permissions you will need are 3072, so your link will take the form https://discordapp.com/oauth2/authorize?client_id=[your bot id from the link above]&scope=bot&permissions=3072
