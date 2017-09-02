@@ -48,12 +48,12 @@ class GatherBot:
 
     async def on_message(self, message):
         if message.author != self.username:
-            logger.info('Message received [{0}]: "{1}"'.format(
-                message.channel,
-                message.content))
             for regex, fn in self.actions.values():
                 match = re.match(regex, message.content)
                 if match:
+                    logger.info('Message received [{0}]: "{1}"'.format(
+                        message.channel,
+                        message.content))
                     try:
                         await fn(
                             self,
