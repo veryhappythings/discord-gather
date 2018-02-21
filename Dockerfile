@@ -1,4 +1,4 @@
-FROM python:3.5
+FROM python:3.6
 
 RUN pip install https://github.com/veryhappythings/discord-gather/archive/v0.4.zip
 
