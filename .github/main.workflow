@@ -12,4 +12,5 @@ action "Run tests" {
   uses = "actions/docker/cli@c08a5fc9e0286844156fefff2c141072048141f6"
   args = "run veryhappythings/discord-gather:$GITHUB_SHA make test-with-coverage"
   needs = ["Build Image"]
+  secrets = ["COVERALLS_REPO_TOKEN"]
 }
