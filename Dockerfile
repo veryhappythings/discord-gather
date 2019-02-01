@@ -1,7 +1,15 @@
-FROM python:3.6
+FROM python:3.6-alpine3.8
 
-RUN pip install https://github.com/veryhappythings/discord-gather/archive/v0.4.zip
+RUN apk update && \
+    apk add make git
 
-ENV DG_TOKEN your_token_here
+RUN mkdir /app
+WORKDIR /app
+
+COPY test_requirements.txt ./
+
+RUN pip install -r test_requirements.txt
+COPY . ./
+RUN pip install -e .
 
 CMD discord-gather
