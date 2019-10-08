@@ -1,0 +1,14 @@
+on: push
+name: Test
+jobs:
+  buildImage:
+    name: Build Image
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Build Image
+      run: docker build -t veryhappythings/discord-gather:${{ github.sha }} .
+    - name: Run tests
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      run: docker run --env COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN veryhappythings/discord-gather:${{ github.sha }} make test-with-coverage
